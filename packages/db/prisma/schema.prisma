@@ -32,27 +32,35 @@ model Booth {
   tasks         Task[]
   review        Review?
   rating        Rating?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 }
 
 model Task {
-  id      Int    @id @default(autoincrement())
-  name    String
-  booth   Booth  @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  boothId Int
+  id        Int    @id @default(autoincrement())
+  name      String
+  booth     Booth  @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  boothId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model Review {
-  id      Int     @id @default(autoincrement())
-  content String?
-  booth   Booth   @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  boothId Int     @unique
+  id        Int     @id @default(autoincrement())
+  content   String?
+  booth     Booth   @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  boothId   Int     @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model Rating {
-  id      Int        @id @default(autoincrement())
-  content RatingType
-  booth   Booth      @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  boothId Int        @unique
+  id        Int        @id @default(autoincrement())
+  content   RatingType
+  booth     Booth      @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  boothId   Int        @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 enum RatingType {
