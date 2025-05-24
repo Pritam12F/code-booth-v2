@@ -25,7 +25,8 @@
     ],
     "onlyBuiltDependencies": [
       "@prisma/client",
-      "esbuild"
+      "esbuild",
+      "framer"
     ]
   }
 }
