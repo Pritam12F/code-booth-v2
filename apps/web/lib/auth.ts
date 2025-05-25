@@ -13,13 +13,12 @@ export const authOptions = {
         email: { label: "Email", type: "text", placeholder: "Email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (credentials?.email && credentials.password) {
           try {
-            const userDb = await db.query.users.findFirst({
-              where: eq(users.email, credentials.email),
-              with: {
-                posts: true,
+            const userDb = await db.user.findFirst({
+              where: {
+                email: credentials.email,
               },
             });
 
@@ -27,13 +26,13 @@ export const authOptions = {
               return null;
             }
 
-            if (userDb.accountType !== "credentials") {
+            if (userDb.accountType !== "CREDENTIALS") {
               return null;
             }
 
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
-              userDb.hashedPassword!
+              userDb.password!
             );
 
             if (!isPasswordCorrect) {
@@ -42,12 +41,8 @@ export const authOptions = {
 
             return {
               id: userDb.id,
-              name: userDb.name,
               email: userDb.email,
               image: userDb.profilePic,
-              phone: userDb.phone,
-              profileColor: userDb.profileColor,
-              coverColor: userDb.coverColor,
             };
           } catch (err) {
             return null;
@@ -71,12 +66,7 @@ export const authOptions = {
         return {
           ...token,
           id: user.id,
-          name: user.name,
-          image: user.image,
           email: user.email,
-          phone: user.phone,
-          profileColor: user.profileColor,
-          coverColor: user.coverColor,
         };
       }
 
@@ -88,37 +78,34 @@ export const authOptions = {
         session.user.email = token.email;
         session.user.image = token.image;
         session.user.name = token.name;
-        session.user.phone = token.phone;
-        session.user.profileColor = token.profileColor;
-        session.user.coverColor = token.coverColor;
       }
 
       return session;
     },
     async signIn({ account, user }) {
       if (account?.provider === "google" || account?.provider === "github") {
-        const isUserInDB = await db.query.users.findFirst({
-          where: eq(users.email, user.email),
+        const isUserInDB = await db.user.findFirst({
+          where: {
+            email: user.email,
+          },
         });
 
         user.id = isUserInDB?.id!;
 
         if (!isUserInDB) {
-          const userId = await db
-            .insert(users)
-            .values({
-              name: user.name,
-              email: user.email,
-              accountType: account.provider,
-              profileColor: randomGradient(),
-              coverColor: randomGradient(),
-            })
-            .returning({ userId: users.id });
+          const insertedUser = await db.user.create({
+            data: {
+              email: user.email!,
+              profilePic: user.image ?? null,
+              accountType: account.provider === "google" ? "GOOGLE" : "GITHUB",
+            },
+          });
 
-          user.id = userId[0]!.userId;
-
-          await createInitialPosts(userId[0]!.userId);
-        } else if (isUserInDB && isUserInDB.accountType !== account.provider) {
+          user.id = insertedUser.id;
+        } else if (
+          isUserInDB &&
+          isUserInDB.accountType !== account.provider.toUpperCase()
+        ) {
           return `/sign-in?error=${encodeURIComponent("User is already registered with other method")}`;
         }
       }

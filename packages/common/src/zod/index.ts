@@ -17,8 +17,8 @@ export const RatingTypeEnum = z.enum([
 // User
 export const UserSchema = z.object({
   id: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 // Booth
