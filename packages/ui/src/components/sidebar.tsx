@@ -10,8 +10,8 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@workspace/ui/components/ui/sheet";
-import { Skeleton } from "@workspace/ui/components/ui/skeleton";
+} from "@workspace/ui/components/sheet";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -19,8 +19,8 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
-import { Button } from "@workspace/ui/components/ui/button";
-import { Input } from "@workspace/ui/components/ui/input";
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
 import { Separator } from "@radix-ui/react-separator";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";

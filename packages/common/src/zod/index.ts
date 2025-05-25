@@ -58,3 +58,8 @@ export const RatingSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export const SignInSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(5, "Password must be at least 8 characters long"),
+});
