@@ -9,7 +9,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { SignInSchema } from "@/schema";
+import { SignUpSchema } from "@/schema";
 import {
   Form,
   FormControl,
@@ -18,24 +18,26 @@ import {
   FormMessage,
 } from "@workspace/ui/components/form";
 
-export const SignInForm = () => {
+export const SignUpForm = () => {
   const router = useRouter();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  const form = useForm<z.infer<typeof SignInSchema>>({
-    resolver: zodResolver(SignInSchema),
+  const form = useForm<z.infer<typeof SignUpSchema>>({
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof SignInSchema>) {
+  function onSubmit(values: z.infer<typeof SignUpSchema>) {
     console.log(values);
   }
 
   return (
-    <div className="w-[700px] mx-auto space-y-2 pt-20 pb-30 flex flex-col items-center">
-      <div className="text-center text-3xl font-bold">Log in</div>
+    <div className="w-[700px] h-screen mx-auto space-y-2 pt-20 pb-30 flex flex-col items-center">
+      <div className="text-center text-3xl font-bold">Join now</div>
       <div>
         <div className="flex flex-col items-center">
           <div className="flex flex-col my-8 space-y-4">
@@ -101,9 +103,26 @@ export const SignInForm = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Confirm your password"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button
               variant={"default"}
               className="cursor-pointer h-8 min-w-[300px] max-w-[350px] mt-4.5"
+              type="submit"
             >
               Continue
             </Button>
@@ -111,14 +130,14 @@ export const SignInForm = () => {
         </Form>
       </div>
       <p className="text-sm mt-4">
-        Don't have an account?
+        Already have an account?
         <br />
         <Button
           variant={"link"}
-          className="cursor-pointer"
-          onClick={() => router.push("/sign-up")}
+          className="cursor-pointer pl-11"
+          onClick={() => router.push("/sign-in")}
         >
-          Create an account
+          Login now
         </Button>
       </p>
     </div>

@@ -11,6 +11,7 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@workspace/ui/components/resizable-navbar";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function NavbarComp() {
@@ -32,17 +33,27 @@ export default function NavbarComp() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="relative w-full inset-y-32">
+    <div className="relative w-full inset-y-10">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
-          <NavbarLogo />
+          <Link href={"/"}>
+            <NavbarLogo />
+          </Link>
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary" className="cursor-pointer">
+            <NavbarButton
+              variant="secondary"
+              className="cursor-pointer"
+              href="/sign-in"
+            >
               Login
             </NavbarButton>
-            <NavbarButton variant="primary" className="cursor-pointer">
+            <NavbarButton
+              variant="primary"
+              className="cursor-pointer"
+              href="/sign-up"
+            >
               Sign Up
             </NavbarButton>
           </div>
