@@ -11,6 +11,7 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@workspace/ui/components/resizable-navbar";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -33,12 +34,18 @@ export default function NavbarComp() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="relative w-full inset-y-10">
+    <div className="relative w-full inset-y-10 my-0">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
           <Link href={"/"}>
-            <NavbarLogo />
+            <Image
+              src={"/brand.png"}
+              width={150}
+              height={150}
+              alt="brand_logo"
+              className="object-fit"
+            />
           </Link>
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
@@ -62,7 +69,15 @@ export default function NavbarComp() {
         {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
-            <NavbarLogo />
+            <Link href={"/"} className="ml-1">
+              <Image
+                src={"/brand.png"}
+                width={150}
+                height={150}
+                alt="brand_logo"
+                className="object-fit"
+              />
+            </Link>
             <MobileNavToggle
               isOpen={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

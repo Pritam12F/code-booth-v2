@@ -1,3 +1,4 @@
+import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import { ReactNode } from "react";
 
@@ -7,9 +8,10 @@ export default async function AuthLayout({
   children: ReactNode;
 }) {
   return (
-    <div>
+    <div className="bg-black">
       <Navbar />
       {children}
+      <Footer />
     </div>
   );
 }

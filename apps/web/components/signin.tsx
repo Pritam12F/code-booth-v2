@@ -2,10 +2,10 @@
 
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
-import { LucideGithub } from "lucide-react";
+import { Github, LucideGithub } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,35 +34,35 @@ export const SignInForm = () => {
   }
 
   return (
-    <div className="w-[700px] mx-auto space-y-2 pt-20 pb-30 flex flex-col items-center">
+    <div className="w-full max-w-[700px] mx-auto px-4 space-y-2 pt-20 pb-30 flex flex-col items-center">
       <div className="text-center text-3xl font-bold">Log in</div>
-      <div>
+      <div className="w-full max-w-[400px]">
         <div className="flex flex-col items-center">
-          <div className="flex flex-col my-8 space-y-4">
+          <div className="flex flex-col my-8 space-y-4 w-full">
             <Button
               variant={"outline"}
-              className="cursor-pointer min-w-[300px] max-w-[350px]"
+              className="cursor-pointer w-full min-w-[280px] max-w-[350px] mx-auto"
             >
               <Image
                 src={"/google-logo.svg"}
-                alt=""
-                width={14}
-                height={14}
-                className="translate-x-[3px]"
+                alt="google_icon"
+                width={15}
+                height={15}
+                className="translate-x-0.5"
               />
-              <span className="ml-1.5">Continue with Google</span>
+              <span className="ml-0.5">Continue with Google</span>
             </Button>
             <Button
               variant={"outline"}
-              className="cursor-pointer min-w-[300px] max-w-[350px]"
+              className="cursor-pointer w-full min-w-[280px] max-w-[350px] mx-auto"
             >
-              <LucideGithub></LucideGithub>
+              <Github />
               <span>Continue with Github</span>
             </Button>
           </div>
-          <div className="relative mb-10">
+          <div className="relative mb-10 w-full">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200 dark:border-green-400"></div>
+              <div className="w-full border-t border-gray-200 dark:border-gray-500"></div>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white dark:bg-[#0a0a0a] text-gray-500">
@@ -72,7 +72,10 @@ export const SignInForm = () => {
           </div>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 w-full"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -103,14 +106,14 @@ export const SignInForm = () => {
             />
             <Button
               variant={"default"}
-              className="cursor-pointer h-8 min-w-[300px] max-w-[350px] mt-4.5"
+              className="cursor-pointer h-8 w-full min-w-[280px] mx-auto mt-4.5"
             >
               Continue
             </Button>
           </form>
         </Form>
       </div>
-      <p className="text-sm mt-4">
+      <p className="text-sm mt-4 text-center px-4">
         Don't have an account?
         <br />
         <Button
