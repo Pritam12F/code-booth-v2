@@ -3,7 +3,7 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { db } from "@workspace/db";
+import { prisma } from "@workspace/db";
 
 export const authOptions = {
   providers: [
@@ -16,7 +16,7 @@ export const authOptions = {
       async authorize(credentials) {
         if (credentials?.email && credentials.password) {
           try {
-            const userDb = await db.user.findFirst({
+            const userDb = await prisma.user.findFirst({
               where: {
                 email: credentials.email,
               },
@@ -84,7 +84,7 @@ export const authOptions = {
     },
     async signIn({ account, user }) {
       if (account?.provider === "google" || account?.provider === "github") {
-        const isUserInDB = await db.user.findFirst({
+        const isUserInDB = await prisma.user.findFirst({
           where: {
             email: user.email,
           },
@@ -93,7 +93,7 @@ export const authOptions = {
         user.id = isUserInDB?.id!;
 
         if (!isUserInDB) {
-          const insertedUser = await db.user.create({
+          const insertedUser = await prisma.user.create({
             data: {
               email: user.email!,
               profilePic: user.image ?? null,
