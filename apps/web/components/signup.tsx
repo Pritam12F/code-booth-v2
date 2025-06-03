@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@workspace/ui/components/form";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export const SignUpForm = () => {
   const router = useRouter();
@@ -43,6 +44,7 @@ export const SignUpForm = () => {
             <Button
               variant={"outline"}
               className="cursor-pointer w-full min-w-[280px] max-w-[350px] mx-auto"
+              onClick={() => signIn("google")}
             >
               <Image
                 src={"/google-logo.svg"}
@@ -56,6 +58,7 @@ export const SignUpForm = () => {
             <Button
               variant={"outline"}
               className="cursor-pointer w-full min-w-[280px] max-w-[350px] mx-auto"
+              onClick={() => signIn("github")}
             >
               <Github />
               <span>Continue with Github</span>
