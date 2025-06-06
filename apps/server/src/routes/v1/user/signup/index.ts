@@ -16,7 +16,7 @@ signUpRouter.post("/", async (req: Request, res: Response) => {
   }
 
   try {
-    const { email, password, confirmPassword } = data;
+    const { email, password } = data;
 
     const userExists = await prisma.user.findFirst({
       where: {
