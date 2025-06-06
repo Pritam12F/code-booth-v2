@@ -5,22 +5,24 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --dts && node dist/index.js",
     "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@workspace/typescript-config": "workspace:*"
+    "@workspace/typescript-config": "workspace:*",
+    "tsup": "^8.5.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "@prisma/client": "6.8.2",
     "prisma": "^6.8.2"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./client": "./src/index.ts"
+    "./client": "./dist/index.js"
   }
 }

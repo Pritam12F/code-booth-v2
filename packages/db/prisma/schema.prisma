@@ -82,6 +82,5 @@ enum RatingType {
 
 enum AccountType {
   CREDENTIALS
-  GOOGLE
-  GITHUB
+  SOCIALS
 }

@@ -12,12 +12,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@workspace/db": "workspace:*",
     "zod": "^3.24.2"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./server": "./src/zod/server/index.ts",
+    "./client": "./src/zod/client/index.ts"
   }
 }

@@ -2,14 +2,12 @@
 
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
-import { Github, LucideGithub } from "lucide-react";
+import { Github } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { SignInSchema } from "@/schema";
 import {
   Form,
   FormControl,
@@ -17,7 +15,9 @@ import {
   FormItem,
   FormMessage,
 } from "@workspace/ui/components/form";
-
+import { signIn } from "next-auth/react";
+import { SignInSchema } from "@workspace/common";
+import { toast } from "sonner";
 export const SignInForm = () => {
   const router = useRouter();
 
@@ -29,8 +29,15 @@ export const SignInForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof SignInSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof SignInSchema>) {
+    const res = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+    });
+
+    if (res?.ok) {
+      toast.success("Logged in...");
+    }
   }
 
   return (
@@ -42,6 +49,7 @@ export const SignInForm = () => {
             <Button
               variant={"outline"}
               className="cursor-pointer w-full min-w-[280px] max-w-[350px] mx-auto"
+              onClick={() => signIn("google")}
             >
               <Image
                 src={"/google-logo.svg"}
@@ -55,6 +63,7 @@ export const SignInForm = () => {
             <Button
               variant={"outline"}
               className="cursor-pointer w-full min-w-[280px] max-w-[350px] mx-auto"
+              onClick={() => signIn("github")}
             >
               <Github />
               <span>Continue with Github</span>

@@ -3,7 +3,7 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { prisma } from "@workspace/db";
+import { prisma } from "@workspace/db/client";
 
 export const authOptions = {
   providers: [
@@ -97,16 +97,16 @@ export const authOptions = {
             data: {
               email: user.email!,
               profilePic: user.image ?? null,
-              accountType: account.provider === "google" ? "GOOGLE" : "GITHUB",
+              accountType:
+                account.provider === "google" || account.provider === "github"
+                  ? "SOCIALS"
+                  : "CREDENTIALS",
             },
           });
 
           user.id = insertedUser.id;
-        } else if (
-          isUserInDB &&
-          isUserInDB.accountType !== account.provider.toUpperCase()
-        ) {
-          return `/sign-in?error=${encodeURIComponent("User is already registered with other method")}`;
+        } else if (isUserInDB && isUserInDB.accountType === "CREDENTIALS") {
+          return `/sign-in?error=${encodeURIComponent("User is registered with socials")}`;
         }
       }
 

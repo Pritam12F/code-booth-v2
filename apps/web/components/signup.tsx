@@ -4,11 +4,10 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Github } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { SignUpSchema } from "@/schema";
+import { SignUpSchema } from "@workspace/common";
 import {
   Form,
   FormControl,
@@ -18,6 +17,8 @@ import {
 } from "@workspace/ui/components/form";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import axios from "axios";
+import { toast } from "sonner";
 
 export const SignUpForm = () => {
   const router = useRouter();
@@ -31,8 +32,22 @@ export const SignUpForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof SignUpSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof SignUpSchema>) {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/user/signup`,
+      {
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+      }
+    );
+
+    if (res.status === 200) {
+      toast.success("User signed up successfully");
+      router.push("/sign-in");
+    } else {
+      toast.error("Error signing up user");
+    }
   }
 
   return (

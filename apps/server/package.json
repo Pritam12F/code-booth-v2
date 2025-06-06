@@ -4,21 +4,33 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -b",
-    "dev": "tsc -b && node dist/index.js"
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --dts && node dist/index.js",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@workspace/common": "workspace:*",
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
-    "@types/express": "^5.0.2"
+    "tsup": "^8.5.0"
   },
   "dependencies": {
+    "@workspace/db": "workspace:*",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
-    "typescript": "^5.8.3",
-    "@workspace/db": "workspace:*"
+    "typescript": "^5.8.3"
+  },
+  "exports": {
+    "./signupRouter": "./src/routes/v1/user/signup/index.ts",
+    "./userRouter": "./src/routes/v1/user/index.ts",
+    "./v1Router": "./src/routes/v1/index.ts"
   }
 }
