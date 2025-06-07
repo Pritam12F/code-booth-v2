@@ -1,14 +1,19 @@
+"use client";
+
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
+  SidebarFooter,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
+import { IconInnerShadowTop } from "@tabler/icons-react";
+import { NavUser } from "./nav-user";
+import { useSession } from "next-auth/react";
+import { SidebarBooths } from "./sidebar-booths";
 
 // Menu items.
 const items = [
@@ -40,27 +45,43 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const { data: session } = useSession();
+
   return (
     <Sidebar>
+      <SidebarHeader>
+        <LogoHeader />
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarBooths />
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser
+          user={{
+            name: session?.user.name!,
+            email: session?.user.email!,
+            avatar: session?.user.image!,
+          }}
+        />
+      </SidebarFooter>
     </Sidebar>
   );
 }
+
+const LogoHeader = () => {
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          asChild
+          className="data-[slot=sidebar-menu-button]:!p-1.5"
+        >
+          <a href="#">
+            <IconInnerShadowTop className="!size-5" />
+            <span className="text-base font-semibold">CodeBooth Inc.</span>
+          </a>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+};

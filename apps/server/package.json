@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --dts && node dist/index.js",
+    "dev": "rm -rf dist && tsup src/index.ts --format esm,cjs --dts && node dist/index.js",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -16,6 +16,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "@workspace/common": "workspace:*",
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
@@ -25,12 +26,18 @@
     "@workspace/db": "workspace:*",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "next-auth": "^4.24.11",
     "typescript": "^5.8.3"
   },
   "exports": {
     "./signupRouter": "./src/routes/v1/user/signup/index.ts",
     "./userRouter": "./src/routes/v1/user/index.ts",
-    "./v1Router": "./src/routes/v1/index.ts"
+    "./v1Router": "./src/routes/v1/index.ts",
+    "./authMiddleware": "./src/middlewares/index.ts",
+    "./fetchAllRouter": "./src/routes/v1/booths/fetchall/index.ts",
+    "./boothRouter": "./src/routes/v1/booths/index.ts"
   }
 }

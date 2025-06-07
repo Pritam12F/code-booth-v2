@@ -18,6 +18,7 @@ import {
 import { signIn } from "next-auth/react";
 import { SignInSchema } from "@workspace/common";
 import { toast } from "sonner";
+import axios from "axios";
 export const SignInForm = () => {
   const router = useRouter();
 
@@ -33,6 +34,7 @@ export const SignInForm = () => {
     const res = await signIn("credentials", {
       email: values.email,
       password: values.password,
+      redirect: false,
     });
 
     if (res?.ok) {
