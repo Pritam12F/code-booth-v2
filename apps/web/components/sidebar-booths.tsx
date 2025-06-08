@@ -9,6 +9,8 @@ import {
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
 import { useSession } from "next-auth/react";
+import { BoothActions } from "./sidebar-booth-actions";
+import { Booth } from "@workspace/db/client";
 
 export const SidebarBooths = () => {
   const { data: session } = useSession();
@@ -23,14 +25,15 @@ export const SidebarBooths = () => {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Application</SidebarGroupLabel>
+      <SidebarGroupLabel>Booths</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {(booths as any[]).map((item: any) => (
+          {(booths as Booth[]).map((item) => (
             <SidebarMenuItem key={item.id}>
               <SidebarMenuButton asChild>
                 <span>{item.title}</span>
               </SidebarMenuButton>
+              <BoothActions boothId={item.id} />
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

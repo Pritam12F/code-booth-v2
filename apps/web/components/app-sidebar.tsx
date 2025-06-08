@@ -14,35 +14,8 @@ import { IconInnerShadowTop } from "@tabler/icons-react";
 import { NavUser } from "./nav-user";
 import { useSession } from "next-auth/react";
 import { SidebarBooths } from "./sidebar-booths";
-
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
+import Link from "next/link";
+import Image from "next/image";
 
 export function AppSidebar() {
   const { data: session } = useSession();
@@ -76,10 +49,10 @@ const LogoHeader = () => {
           asChild
           className="data-[slot=sidebar-menu-button]:!p-1.5"
         >
-          <a href="#">
-            <IconInnerShadowTop className="!size-5" />
+          <Link href="/" className="flex items-center my-2">
+            <Image src={"/cropped.png"} alt="" width={30} height={30} />
             <span className="text-base font-semibold">CodeBooth Inc.</span>
-          </a>
+          </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>

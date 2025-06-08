@@ -26,7 +26,7 @@ model User {
 }
 
 model Booth {
-  id            Int     @id @default(autoincrement())
+  id            String  @id @default(cuid())
   interviewer   User    @relation("InterviewerRelation", fields: [interviewerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   interviewerId String
   interviewee   User    @relation("IntervieweeRelation", fields: [intervieweeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -41,19 +41,19 @@ model Booth {
 }
 
 model Task {
-  id        Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  booth     Booth  @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  boothId   Int
+  booth     Booth    @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  boothId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
 
 model Review {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   content   String?
-  booth     Booth   @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  boothId   Int     @unique
+  booth     Booth    @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  boothId   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -62,9 +62,9 @@ model Rating {
   id        Int        @id @default(autoincrement())
   content   RatingType
   booth     Booth      @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  boothId   Int        @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  boothId   String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
 }
 
 enum RatingType {

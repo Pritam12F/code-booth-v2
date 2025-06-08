@@ -1,3 +1,12 @@
+"use client";
+
+import { useState } from "react";
+
 export default function DashboardPage() {
-  return <>Hi there</>;
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>click me</button>
+    </>
+  );
 }
