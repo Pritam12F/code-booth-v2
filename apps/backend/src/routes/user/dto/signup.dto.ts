@@ -4,9 +4,9 @@ export class SignUpDto {
   @IsString()
   @IsEmail()
   @IsNotEmpty()
-  readonly email: string;
+  readonly email!: string;
 
   @IsString()
   @IsNotEmpty()
-  readonly password: string;
+  readonly password!: string;
 }

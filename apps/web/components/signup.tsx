@@ -34,15 +34,14 @@ export const SignUpForm = () => {
 
   async function onSubmit(values: z.infer<typeof SignUpSchema>) {
     const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/user/signup`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/signup`,
       {
         email: values.email,
         password: values.password,
-        confirmPassword: values.confirmPassword,
       }
     );
 
-    if (res.status === 200) {
+    if (res.status === 201) {
       toast.success("User signed up successfully");
       router.push("/sign-in");
     } else {

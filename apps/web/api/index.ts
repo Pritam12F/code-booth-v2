@@ -8,7 +8,7 @@ export async function fetchBooths() {
 
   try {
     const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/booths/fetchall`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/booths`,
       { email },
       {
         headers: {

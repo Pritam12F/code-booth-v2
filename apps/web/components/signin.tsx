@@ -18,7 +18,7 @@ import {
 import { signIn } from "next-auth/react";
 import { SignInSchema } from "@workspace/common";
 import { toast } from "sonner";
-import axios from "axios";
+
 export const SignInForm = () => {
   const router = useRouter();
 

@@ -9,7 +9,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@workspace/ui/components/dialog";
 import {
   Drawer,
@@ -19,7 +18,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@workspace/ui/components/drawer";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";

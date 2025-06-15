@@ -10,7 +10,7 @@ import {
 } from "@workspace/ui/components/sidebar";
 import { useSession } from "next-auth/react";
 import { BoothActions } from "./sidebar-booth-actions";
-import { Booth } from "@workspace/db/client";
+import { Booth } from "@workspace/db";
 
 export const SidebarBooths = () => {
   const { data: session } = useSession();
