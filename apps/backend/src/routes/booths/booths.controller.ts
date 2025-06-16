@@ -1,11 +1,16 @@
 import {
+  Body,
   Controller,
+  Delete,
   Headers,
   HttpException,
   HttpStatus,
+  Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { BoothsService } from './booths.service';
+import { UpdateBoothDto } from './dto/update-booth.dto';
 
 @Controller('booths')
 export class BoothsController {
@@ -19,7 +24,51 @@ export class BoothsController {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
-          error: 'Could not signup user',
+          error: 'Could not fetch booths',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Put(':id')
+  async updateBooth(
+    @Headers() headers: Record<string, string>,
+    @Body() updateBoothDto: UpdateBoothDto,
+    @Param('id') boothId: string,
+  ) {
+    try {
+      return await this.boothsService.updateBooth(
+        boothId,
+        headers.token!,
+        updateBoothDto,
+      );
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Could not update booth',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: err,
+        },
+      );
+    }
+  }
+
+  @Delete(':id')
+  async deleteBooth(@Param('id') id: string) {
+    try {
+      await this.boothsService.deleteBooth(id);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Could not delete booth',
         },
         HttpStatus.FORBIDDEN,
         {

@@ -27,9 +27,9 @@ model User {
 
 model Booth {
   id            String  @id @default(cuid())
-  interviewer   User    @relation("InterviewerRelation", fields: [interviewerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  interviewer   User    @relation("InterviewerRelation", fields: [interviewerId], references: [id], onDelete: Cascade)
   interviewerId String
-  interviewee   User    @relation("IntervieweeRelation", fields: [intervieweeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  interviewee   User    @relation("IntervieweeRelation", fields: [intervieweeId], references: [id], onDelete: Cascade)
   intervieweeId String
   title         String
   passed        Boolean @default(false)
@@ -43,7 +43,7 @@ model Booth {
 model Task {
   id        Int      @id @default(autoincrement())
   name      String
-  booth     Booth    @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  booth     Booth    @relation(fields: [boothId], references: [id], onDelete: Cascade)
   boothId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -52,7 +52,7 @@ model Task {
 model Review {
   id        Int      @id @default(autoincrement())
   content   String?
-  booth     Booth    @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  booth     Booth    @relation(fields: [boothId], references: [id], onDelete: Cascade)
   boothId   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -61,7 +61,7 @@ model Review {
 model Rating {
   id        Int        @id @default(autoincrement())
   content   RatingType
-  booth     Booth      @relation(fields: [boothId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  booth     Booth      @relation(fields: [boothId], references: [id], onDelete: Cascade)
   boothId   String     @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now())
