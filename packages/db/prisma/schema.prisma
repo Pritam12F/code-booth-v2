@@ -68,16 +68,16 @@ model Rating {
 }
 
 enum RatingType {
-  ONE
-  TWO
-  THREE
-  FOUR
-  FIVE
-  SIX
-  SEVEN
-  EIGHT
-  NINE
-  TEN
+  One
+  Two
+  Three
+  Four
+  Five
+  Six
+  Seven
+  Eight
+  Nine
+  Ten
 }
 
 enum AccountType {

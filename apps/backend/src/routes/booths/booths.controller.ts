@@ -7,7 +7,6 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Post,
   Put,
 } from '@nestjs/common';
 import { BoothsService } from './booths.service';
@@ -17,7 +16,7 @@ import { UpdateBoothDto } from './dto/update-booth.dto';
 export class BoothsController {
   constructor(private boothsService: BoothsService) {}
 
-  @Post()
+  @Get()
   async fetchBooths(@Headers() headers: Record<string, string>) {
     try {
       return await this.boothsService.fetchAllBooths(headers.token!);

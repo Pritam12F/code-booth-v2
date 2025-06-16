@@ -1,5 +1,6 @@
 import { getUserEmail } from "@/lib/access-token";
 import { getToken } from "@/server";
+import { Booth, User } from "@workspace/db";
 import axios from "axios";
 
 export async function fetchBooths() {
@@ -7,9 +8,8 @@ export async function fetchBooths() {
   const token = await getToken(email!);
 
   try {
-    const res = await axios.post(
+    const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/booths`,
-      { email },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -21,8 +21,42 @@ export async function fetchBooths() {
 
     return [...booths.booths, ...booths.participatedBooths];
   } catch (err) {
-    console.error(err);
-
     return [];
+  }
+}
+
+export async function fetchBooth(boothId: string) {
+  const email = await getUserEmail();
+  const token = await getToken(email!);
+
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/booths/${boothId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(res.data.booth);
+
+    return res.data.booth;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchUsers() {
+  const email = await getUserEmail();
+
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user?email=${email}`
+    );
+
+    return res.data as string[];
+  } catch (err) {
+    return null;
   }
 }

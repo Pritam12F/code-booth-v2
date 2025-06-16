@@ -4,6 +4,20 @@ import { prisma } from '@workspace/db';
 
 @Injectable()
 export class UserService {
+  async fetchAllUsersEmails(email: string) {
+    const users = await prisma.user.findMany({
+      where: {
+        NOT: {
+          email: {
+            equals: email,
+          },
+        },
+      },
+    });
+
+    return users.map((x) => x.email);
+  }
+
   async signUp({ email, password }: { email: string; password: string }) {
     const userExists = await prisma.user.findFirst({
       where: { email },
