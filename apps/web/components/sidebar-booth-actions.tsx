@@ -8,9 +8,8 @@ import {
 import { SidebarMenuAction } from "@workspace/ui/components/sidebar";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { Edit, Link, MoreHorizontal, Trash2 } from "lucide-react";
-
 import { useState } from "react";
-import { DrawerDialog } from "./update-booth";
+import { UpdateDialog } from "./update-booth";
 
 export const BoothActions = ({ boothId }: { boothId: string }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -49,7 +48,11 @@ export const BoothActions = ({ boothId }: { boothId: string }) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <DrawerDialog dialogOpen={open} setDialogOpen={setOpen} />
+      <UpdateDialog
+        dialogOpen={open}
+        setDialogOpen={setOpen}
+        boothId={boothId}
+      />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Headers,
   HttpException,
   HttpStatus,
@@ -29,6 +30,27 @@ export class BoothsController {
         HttpStatus.FORBIDDEN,
         {
           cause: error,
+        },
+      );
+    }
+  }
+
+  @Get(':id')
+  async fetchBooth(
+    @Headers() headers: Record<string, string>,
+    @Param('id') boothId: string,
+  ) {
+    try {
+      return await this.boothsService.fetchBooth(headers.token!, boothId);
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Could not fetch booth',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: err,
         },
       );
     }

@@ -18,6 +18,37 @@ export class BoothsService {
     return booths;
   }
 
+  async fetchBooth(email: string, boothId: string) {
+    const userFetched = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+      select: {
+        booths: {
+          include: {
+            tasks: true,
+            review: true,
+            rating: true,
+            interviewee: true,
+            interviewer: true,
+          },
+        },
+      },
+    });
+
+    if (!userFetched?.booths.some((x) => x.id === boothId)) {
+      return {
+        message: 'User is not owner of this booth',
+        booth: null,
+      };
+    }
+
+    return {
+      booth: userFetched?.booths.find((x) => x.id === boothId),
+      message: 'Booth fetched successfully',
+    };
+  }
+
   async deleteBooth(id: string) {
     await prisma.user.delete({
       where: {

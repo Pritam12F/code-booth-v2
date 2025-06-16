@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -23,13 +22,17 @@ import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
 
-export function DrawerDialog({
+export function UpdateDialog({
   dialogOpen,
   setDialogOpen,
+  boothId,
 }: {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  boothId: string;
 }) {
   const isMobile = useIsMobile();
 
@@ -44,7 +47,7 @@ export function DrawerDialog({
               you&apos;re done.
             </DialogDescription>
           </DialogHeader>
-          <ProfileForm />
+          <ProfileForm boothId={boothId} />
         </DialogContent>
       </Dialog>
     );
@@ -60,7 +63,7 @@ export function DrawerDialog({
             done.
           </DrawerDescription>
         </DrawerHeader>
-        <ProfileForm className="px-4" />
+        <ProfileForm className="px-4" boothId={boothId} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -71,17 +74,19 @@ export function DrawerDialog({
   );
 }
 
-function ProfileForm({ className }: React.ComponentProps<"form">) {
+function ProfileForm({
+  className,
+  boothId,
+}: React.ComponentProps<"form"> & {
+  boothId: string;
+}) {
+  const session = useSession();
+  const {} = useQuery({
+    queryFn: async () => {},
+    queryKey: [`booth-${boothId}`],
+  });
   return (
     <form className={cn("grid items-start gap-6", className)}>
-      <div className="grid gap-3">
-        <Label htmlFor="name">Name</Label>
-        <Input type="name" id="name" defaultValue="shadcn@example.com" />
-      </div>
-      <div className="grid gap-3">
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" defaultValue="@shadcn" />
-      </div>
       <div className="grid gap-3">
         <Label htmlFor="name">Name</Label>
         <Input type="name" id="name" defaultValue="shadcn@example.com" />
