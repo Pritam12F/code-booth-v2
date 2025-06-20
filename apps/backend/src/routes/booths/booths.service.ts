@@ -18,39 +18,31 @@ export class BoothsService {
     return booths;
   }
 
-  async fetchBooth(email: string, boothId: string) {
-    const userFetched = await prisma.user.findFirst({
+  async fetchBooth(userId: string, boothId: string) {
+    const boothFetched = await prisma.booth.findFirst({
       where: {
-        email,
-      },
-      select: {
-        booths: {
-          include: {
-            tasks: true,
-            review: true,
-            rating: true,
-            interviewee: true,
-            interviewer: true,
+        id: boothId,
+        OR: [
+          {
+            intervieweeId: userId,
           },
-        },
+          { interviewerId: userId },
+        ],
+      },
+      include: {
+        interviewee: true,
+        interviewer: true,
+        tasks: true,
+        review: true,
+        rating: true,
       },
     });
 
-    if (!userFetched?.booths.some((x) => x.id === boothId)) {
-      return {
-        message: 'User is not owner of this booth',
-        booth: null,
-      };
-    }
-
-    return {
-      booth: userFetched?.booths.find((x) => x.id === boothId),
-      message: 'Booth fetched successfully',
-    };
+    return boothFetched;
   }
 
   async deleteBooth(id: string) {
-    await prisma.user.delete({
+    await prisma.booth.delete({
       where: {
         id,
       },
@@ -59,16 +51,21 @@ export class BoothsService {
 
   async updateBooth(
     boothId: string,
-    email: string,
+    userId: string,
     updateData: UpdateBoothDto,
   ) {
-    const fetchedUser = await prisma.user.findFirst({
-      where: { email },
-      select: { booths: true, participatedBooths: true },
+    const fetchedBooth = await prisma.booth.findFirst({
+      where: { id: boothId, interviewerId: userId },
+      include: {
+        tasks: true,
+        review: true,
+      },
     });
 
-    if (!fetchedUser?.booths.some((booth) => booth.id === boothId)) {
-      throw new Error('User is not owner of this booth');
+    if (!fetchedBooth) {
+      throw new Error(
+        'User is not owner of this booth or booth does not exist',
+      );
     }
 
     const { title, intervieweeId, passed, tasks, review } = updateData;
@@ -76,16 +73,6 @@ export class BoothsService {
     if (!title && !intervieweeId && !passed && !tasks && !review) {
       throw new Error('No data to update');
     }
-
-    const fetchedBooth = await prisma.booth.findFirst({
-      where: {
-        id: boothId,
-      },
-      select: {
-        review: true,
-        tasks: true,
-      },
-    });
 
     const dataBooth = {
       title: title || undefined,

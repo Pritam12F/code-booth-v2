@@ -9,11 +9,15 @@ export class TokenMiddleware implements NestMiddleware {
     console.log(token);
 
     try {
-      const decoded = jwt.verify(token!, process.env.JWT_SECRET!) as any;
+      const decoded = jwt.verify(token!, process.env.JWT_SECRET!) as {
+        email: string;
+        id: string;
+      };
 
-      req.headers['token'] = decoded.email;
+      req.headers['email'] = decoded.email;
+      req.headers['userId'] = decoded.id;
       next();
-    } catch (e) {
+    } catch {
       return res.status(403).json({ message: 'Forbidden' });
     }
   }

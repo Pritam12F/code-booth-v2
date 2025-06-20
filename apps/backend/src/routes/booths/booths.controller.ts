@@ -19,7 +19,7 @@ export class BoothsController {
   @Get()
   async fetchBooths(@Headers() headers: Record<string, string>) {
     try {
-      return await this.boothsService.fetchAllBooths(headers.token!);
+      return await this.boothsService.fetchAllBooths(headers.email!);
     } catch (error) {
       throw new HttpException(
         {
@@ -40,7 +40,7 @@ export class BoothsController {
     @Param('id') boothId: string,
   ) {
     try {
-      return await this.boothsService.fetchBooth(headers.token!, boothId);
+      return await this.boothsService.fetchBooth(headers.userId!, boothId);
     } catch (err) {
       throw new HttpException(
         {
@@ -64,7 +64,7 @@ export class BoothsController {
     try {
       return await this.boothsService.updateBooth(
         boothId,
-        headers.token!,
+        headers.userId!,
         updateBoothDto,
       );
     } catch (err) {

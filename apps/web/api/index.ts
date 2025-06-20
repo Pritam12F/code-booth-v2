@@ -1,11 +1,11 @@
-import { getUserEmail } from "@/lib/access-token";
+import { getUserDetails } from "@/lib/access-token";
 import { getToken } from "@/server";
 import { Booth, User } from "@workspace/db";
 import axios from "axios";
 
 export async function fetchBooths() {
-  const email = await getUserEmail();
-  const token = await getToken(email!);
+  const { email, id } = await getUserDetails();
+  const token = await getToken(email, id);
 
   try {
     const res = await axios.get(
@@ -26,8 +26,8 @@ export async function fetchBooths() {
 }
 
 export async function fetchBooth(boothId: string) {
-  const email = await getUserEmail();
-  const token = await getToken(email!);
+  const { email, id } = await getUserDetails();
+  const token = await getToken(email, id);
 
   try {
     const res = await axios.get(
@@ -48,7 +48,7 @@ export async function fetchBooth(boothId: string) {
 }
 
 export async function fetchUsers() {
-  const email = await getUserEmail();
+  const { email } = await getUserDetails();
 
   try {
     const res = await axios.get(

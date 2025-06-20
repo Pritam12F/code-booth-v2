@@ -9,7 +9,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import { IconInnerShadowTop } from "@tabler/icons-react";
 import { NavUser } from "./nav-user";
 import { useSession } from "next-auth/react";
 import { SidebarBooths } from "./sidebar-booths";
