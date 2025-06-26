@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsObject,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBoothDto {
   @IsString()
@@ -19,17 +13,11 @@ export class UpdateBoothDto {
   @IsOptional()
   readonly passed?: boolean;
 
-  @IsObject()
+  @IsString()
   @IsOptional()
-  readonly review?: {
-    readonly reviewId: number;
-    readonly reviewContent: string;
-  };
+  readonly review?: string;
 
   @IsArray()
   @IsOptional()
-  readonly tasks?: {
-    readonly taskId: number;
-    readonly taskContent: string;
-  }[];
+  readonly tasks?: any[];
 }

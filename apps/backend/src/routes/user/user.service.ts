@@ -13,9 +13,13 @@ export class UserService {
           },
         },
       },
+      select: {
+        email: true,
+        id: true,
+      },
     });
 
-    return users.map((x) => x.email);
+    return users;
   }
 
   async signUp({ email, password }: { email: string; password: string }) {

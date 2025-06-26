@@ -7,7 +7,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Put,
+  Post,
 } from '@nestjs/common';
 import { BoothsService } from './booths.service';
 import { UpdateBoothDto } from './dto/update-booth.dto';
@@ -40,7 +40,9 @@ export class BoothsController {
     @Param('id') boothId: string,
   ) {
     try {
-      return await this.boothsService.fetchBooth(headers.userId!, boothId);
+      return {
+        booth: await this.boothsService.fetchBooth(headers.userId!, boothId),
+      };
     } catch (err) {
       throw new HttpException(
         {
@@ -55,7 +57,7 @@ export class BoothsController {
     }
   }
 
-  @Put(':id')
+  @Post(':id')
   async updateBooth(
     @Headers() headers: Record<string, string>,
     @Body() updateBoothDto: UpdateBoothDto,
@@ -71,7 +73,7 @@ export class BoothsController {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
-          error: 'Could not update booth',
+          error: err,
         },
         HttpStatus.FORBIDDEN,
         {

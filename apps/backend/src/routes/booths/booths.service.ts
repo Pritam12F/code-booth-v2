@@ -75,9 +75,9 @@ export class BoothsService {
     }
 
     const dataBooth = {
-      title: title || undefined,
-      intervieweeId: intervieweeId || undefined,
-      passed: passed || undefined,
+      title: title,
+      intervieweeId: intervieweeId,
+      passed: passed,
     };
 
     await prisma.booth.update({
@@ -88,57 +88,51 @@ export class BoothsService {
     });
 
     if (review && tasks && tasks.length > 0) {
-      if (fetchedBooth?.review?.id === review.reviewId) {
-        await prisma.review.update({
-          where: {
-            id: review?.reviewId,
-          },
-          data: {
-            content: review?.reviewContent,
-          },
-        });
-      }
+      await prisma.review.update({
+        where: {
+          boothId: fetchedBooth.id,
+        },
+        data: {
+          content: review,
+        },
+      });
 
       await Promise.all(
         tasks.map((task) => {
-          if (fetchedBooth?.tasks.some(({ id }) => id === task.taskId)) {
-            return prisma.task.update({
-              where: {
-                id: task.taskId,
-              },
-              data: {
-                name: task.taskContent,
-              },
-            });
-          }
+          return prisma.task.update({
+            where: {
+              boothId: task.boothId,
+              id: task.id,
+            },
+            data: {
+              name: task.name,
+            },
+          });
         }),
       );
     } else if (!review && tasks && tasks.length > 0) {
       await Promise.all(
         tasks.map((task) => {
-          if (fetchedBooth?.tasks.some(({ id }) => id === task.taskId)) {
-            return prisma.task.update({
-              where: {
-                id: task.taskId,
-              },
-              data: {
-                name: task.taskContent,
-              },
-            });
-          }
+          return prisma.task.update({
+            where: {
+              boothId: task.boothId,
+              id: task.id,
+            },
+            data: {
+              name: task.name,
+            },
+          });
         }),
       );
     } else if (review && (!tasks || tasks.length <= 0)) {
-      if (fetchedBooth?.review?.id === review.reviewId) {
-        await prisma.review.update({
-          where: {
-            id: review?.reviewId,
-          },
-          data: {
-            content: review?.reviewContent,
-          },
-        });
-      }
+      await prisma.review.update({
+        where: {
+          boothId: fetchedBooth.id,
+        },
+        data: {
+          content: review,
+        },
+      });
     }
     return {
       message: `Booth ${boothId} updated successfully`,

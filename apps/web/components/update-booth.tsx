@@ -24,8 +24,8 @@ import { cn } from "@workspace/ui/lib/utils";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { Switch } from "@workspace/ui/components/switch";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { useQuery } from "@tanstack/react-query";
-import { fetchBooth, fetchUsers } from "@/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { fetchBooth, fetchUsers, updateBooth } from "@/api";
 import {
   Select,
   SelectContent,
@@ -48,7 +48,7 @@ export function UpdateDialog({
   if (!isMobile) {
     return (
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] scrollbar-hide">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Update booth</DialogTitle>
             <DialogDescription>
@@ -89,13 +89,20 @@ function ProfileForm({
 }: React.ComponentProps<"form"> & {
   boothId: string;
 }) {
-  const [intervieweeEmail, setIntervieweeEmail] = React.useState<string>();
+  const [boothName, setBoothName] = React.useState("");
+  const [intervieweeId, setIntervieweeId] = React.useState<string>();
   const [rating, setRating] = React.useState<string>();
-  const [passed, setPassed] = React.useState(true);
+  const [review, setReview] = React.useState("");
+  const [passed, setPassed] = React.useState(false);
+  const [tasks, setTasks] = React.useState<any[]>([]);
 
   const { data: boothDetails, isLoading } = useQuery({
     queryFn: async () => {
       const booth = await fetchBooth(boothId);
+      setBoothName(booth.title);
+      setIntervieweeId(booth.interviewee.id);
+      setRating(booth.rating);
+      setReview(booth.review.content);
       setPassed(booth?.passed ?? false);
       return booth;
     },
@@ -109,6 +116,14 @@ function ProfileForm({
     queryKey: ["users"],
   });
 
+  const { mutateAsync: updateBoothMutation } = useMutation({
+    mutationFn: updateBooth,
+  });
+
+  React.useEffect(() => {
+    setTasks([...(boothDetails?.tasks ?? [])]);
+  }, [boothDetails?.tasks]);
+
   return (
     <form
       className={cn(
@@ -118,35 +133,54 @@ function ProfileForm({
     >
       <div className="grid gap-3">
         <Label htmlFor="name">Name</Label>
-        <Input type="name" id="name" defaultValue={boothDetails?.title} />
+        <Input
+          type="name"
+          id="name"
+          defaultValue={boothDetails?.title}
+          onChange={(e) => setBoothName(e.target.value)}
+        />
       </div>
       <div className="grid gap-3">
         <Label htmlFor="name">Interviewee</Label>
-        <SelectWrapper
+        <SelectUserWrapper
           placeholder="interviewee"
           options={allUsers ?? []}
-          setValue={setIntervieweeEmail}
+          setValue={setIntervieweeId}
         />
       </div>
       <div className="grid gap-3">
         <Label htmlFor="name">Rating</Label>
-        <SelectWrapper
+        <SelectRatingWrapper
           placeholder="rating"
           options={RatingOptions}
           setValue={setRating}
         />
       </div>
-      {boothDetails?.tasks.map((x: any, index: number) => {
+      {tasks.map((x: any, index: number) => {
         return (
           <div className="grid gap-3">
             <Label htmlFor="name">Task</Label>
-            <Input type="name" id="name" defaultValue={x.name} />
+            <Input
+              type="name"
+              id="name"
+              defaultValue={x.name}
+              onChange={(e) => {
+                const arrIndex = tasks.findIndex((task) => task.id === x.id);
+                tasks[arrIndex] = {
+                  ...tasks[arrIndex],
+                  name: e.target.value,
+                };
+              }}
+            />
           </div>
         );
       })}
       <div className="grid gap-3">
         <Label htmlFor="name">Review</Label>
-        <Textarea defaultValue={boothDetails?.review} />
+        <Textarea
+          defaultValue={boothDetails?.review.content}
+          onChange={(e) => setReview(e.target.value)}
+        />
       </div>
       <div className="grid gap-3">
         <Switch
@@ -155,12 +189,62 @@ function ProfileForm({
           className="bg-white"
         />
       </div>
-      <Button type="submit">Save changes</Button>
+      <Button
+        type="button"
+        onClick={async () => {
+          try {
+            await updateBoothMutation({
+              boothId,
+              boothName,
+              intervieweeId,
+              rating,
+              review,
+              passed,
+              tasks,
+            });
+          } catch {
+            alert("Couldn't update booth");
+          }
+        }}
+      >
+        Save changes
+      </Button>
     </form>
   );
 }
 
-function SelectWrapper<T, K>({
+function SelectUserWrapper({
+  placeholder,
+  options,
+  setValue,
+}: {
+  placeholder: string;
+  options: { id: string; email: string }[];
+  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+}) {
+  return (
+    <Select
+      onValueChange={(value) => {
+        setValue(value);
+      }}
+    >
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder={`Choose ${placeholder}`} />
+      </SelectTrigger>
+      <SelectContent className="max-h-[300px] w-full">
+        {options.map(({ id, email }) => {
+          return (
+            <SelectItem value={id} className="w-full p-2.5">
+              {email}
+            </SelectItem>
+          );
+        })}
+      </SelectContent>
+    </Select>
+  );
+}
+
+function SelectRatingWrapper({
   placeholder,
   options,
   setValue,
@@ -179,10 +263,10 @@ function SelectWrapper<T, K>({
         <SelectValue placeholder={`Choose ${placeholder}`} />
       </SelectTrigger>
       <SelectContent className="max-h-[300px] w-full">
-        {options.map((email) => {
+        {options.map((option) => {
           return (
-            <SelectItem value={email} className="w-full p-2.5">
-              {email}
+            <SelectItem value={option} className="w-full p-2.5">
+              {option}
             </SelectItem>
           );
         })}

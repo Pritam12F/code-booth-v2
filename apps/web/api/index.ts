@@ -1,11 +1,9 @@
-import { getUserDetails } from "@/lib/access-token";
-import { getToken } from "@/server";
-import { Booth, User } from "@workspace/db";
+import { getJWT, getUserDetails } from "@/lib/user-details";
 import axios from "axios";
 
 export async function fetchBooths() {
   const { email, id } = await getUserDetails();
-  const token = await getToken(email, id);
+  const token = await getJWT(email, id);
 
   try {
     const res = await axios.get(
@@ -27,7 +25,7 @@ export async function fetchBooths() {
 
 export async function fetchBooth(boothId: string) {
   const { email, id } = await getUserDetails();
-  const token = await getToken(email, id);
+  const token = await getJWT(email, id);
 
   try {
     const res = await axios.get(
@@ -38,8 +36,6 @@ export async function fetchBooth(boothId: string) {
         },
       }
     );
-
-    console.log(res.data.booth);
 
     return res.data.booth;
   } catch (err) {
@@ -53,6 +49,50 @@ export async function fetchUsers() {
   try {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/user?email=${email}`
+    );
+
+    return res.data as { id: string; email: string }[] | null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function updateBooth({
+  boothId,
+  boothName,
+  intervieweeId,
+  rating,
+  review,
+  passed,
+  tasks,
+}: {
+  boothId: string;
+  boothName?: string;
+  intervieweeId?: string;
+  rating?: string;
+  review?: string;
+  passed?: boolean;
+  tasks?: any[];
+}) {
+  const { email, id } = await getUserDetails();
+  const token = await getJWT(email, id);
+
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/booths/${boothId}`,
+      {
+        intervieweeId,
+        title: boothName,
+        passed,
+        rating,
+        tasks,
+        review,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
 
     return res.data as string[];
