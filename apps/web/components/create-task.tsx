@@ -16,7 +16,7 @@ export function CreateTaskDialog({
 }: {
   tasks: any[];
   addTaskHandler: React.Dispatch<React.SetStateAction<any[]>>;
-  boothId: string;
+  boothId?: string;
 }) {
   const [task, setTask] = useState<any>();
   const [isOpen, setIsOpen] = useState(false);

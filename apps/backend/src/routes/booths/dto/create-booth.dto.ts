@@ -1,6 +1,9 @@
 import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
 
-export class UpdateBoothDto {
+export class CreateBoothDTO {
+  @IsString()
+  readonly interviewerId?: string;
+
   @IsString()
   @IsOptional()
   readonly intervieweeId?: string;

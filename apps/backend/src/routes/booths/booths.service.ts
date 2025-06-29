@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { prisma, Task } from '@workspace/db';
+import { prisma, Rating, Task } from '@workspace/db';
 import { UpdateBoothDto } from './dto/update-booth.dto';
+import { CreateBoothDTO } from './dto/create-booth.dto';
 
 @Injectable()
 export class BoothsService {
@@ -41,6 +42,56 @@ export class BoothsService {
     return boothFetched;
   }
 
+  async createBooth(userId: string, createBoothData: CreateBoothDTO) {
+    const {
+      intervieweeId,
+      interviewerId,
+      passed,
+      title,
+      review,
+      rating,
+      tasks,
+    } = createBoothData;
+
+    if (!interviewerId) {
+      throw new Error('Interviewer ID not provided');
+    }
+
+    const newBooth = await prisma.booth.create({
+      data: {
+        interviewerId,
+        intervieweeId: intervieweeId!,
+        title: title ?? `Example ${Math.random() * 20 + 1}`,
+        passed,
+      },
+    });
+
+    await prisma.review.create({
+      data: {
+        boothId: newBooth.id,
+        content: review,
+      },
+    });
+
+    await prisma.rating.create({
+      data: {
+        boothId: newBooth.id,
+        content: rating as Pick<Rating, 'content'>['content'],
+      },
+    });
+
+    await Promise.all(
+      tasks!.map(async (task: Record<string, string>) => {
+        await prisma.task.create({
+          data: {
+            boothId: newBooth.id,
+            name: task.name!,
+          },
+        });
+      }),
+    );
+  }
+
   async deleteBooth(id: number) {
     await prisma.task.delete({
       where: {
@@ -68,9 +119,9 @@ export class BoothsService {
       );
     }
 
-    const { title, intervieweeId, passed, tasks, review } = updateData;
+    const { title, intervieweeId, passed, tasks, review, rating } = updateData;
 
-    if (!title && !intervieweeId && !passed && !tasks && !review) {
+    if (!title && !intervieweeId && !passed && !tasks && !review && !rating) {
       throw new Error('No data to update');
     }
 
@@ -87,7 +138,7 @@ export class BoothsService {
       data: dataBooth,
     });
 
-    if (review && tasks && tasks.length > 0) {
+    if (review) {
       await prisma.review.update({
         where: {
           boothId: fetchedBooth.id,
@@ -96,7 +147,8 @@ export class BoothsService {
           content: review,
         },
       });
-
+    }
+    if (tasks && tasks.length > 0) {
       await Promise.all(
         tasks.map((task: Task) => {
           if (!task.id) {
@@ -118,35 +170,14 @@ export class BoothsService {
           });
         }),
       );
-    } else if (!review && tasks && tasks.length > 0) {
-      await Promise.all(
-        tasks.map((task: Task) => {
-          if (!task.id) {
-            return prisma.task.create({
-              data: {
-                name: task.name,
-                boothId: task.boothId,
-              },
-            });
-          }
-          return prisma.task.update({
-            where: {
-              boothId: task.boothId,
-              id: task.id,
-            },
-            data: {
-              name: task.name,
-            },
-          });
-        }),
-      );
-    } else if (review && (!tasks || tasks.length <= 0)) {
-      await prisma.review.update({
+    }
+    if (rating) {
+      await prisma.rating.update({
         where: {
-          boothId: fetchedBooth.id,
+          boothId: boothId,
         },
         data: {
-          content: review,
+          content: rating as Pick<Rating, 'content'>['content'],
         },
       });
     }

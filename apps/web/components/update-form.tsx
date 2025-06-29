@@ -1,5 +1,5 @@
 import { deleteTask, fetchBooth, fetchUsers, updateBooth } from "@/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
@@ -25,6 +25,7 @@ export function UpdateForm({
   const [review, setReview] = useState("");
   const [passed, setPassed] = useState(false);
   const [tasks, setTasks] = useState<any[]>([]);
+  const queryClient = useQueryClient();
 
   const { data: boothDetails, isLoading } = useQuery({
     queryFn: async () => {
@@ -48,6 +49,9 @@ export function UpdateForm({
 
   const { mutateAsync: updateBoothMutation } = useMutation({
     mutationFn: updateBooth,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: `booth-${boothId}` as any });
+    },
   });
 
   const { mutateAsync: deleteTaskMutation } = useMutation({

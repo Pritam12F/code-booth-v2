@@ -75,6 +75,30 @@ export class BoothsController {
     }
   }
 
+  @Post(':userI')
+  async createBooth(
+    @Headers() headers: Record<string, string>,
+    @Body() updateBoothDto: UpdateBoothDto,
+  ) {
+    try {
+      return await this.boothsService.createBooth(
+        headers.userId!,
+        updateBoothDto,
+      );
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: err,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: err,
+        },
+      );
+    }
+  }
+
   @Post(':id')
   async updateBooth(
     @Headers() headers: Record<string, string>,
