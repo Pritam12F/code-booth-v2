@@ -9,7 +9,7 @@ import { SidebarMenuAction } from "@workspace/ui/components/sidebar";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { Edit, Link, MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { UpdateDialog } from "./update-booth";
+import { UpdateDialog } from "./booth-dialog";
 
 export const BoothActions = ({ boothId }: { boothId: string }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -52,6 +52,7 @@ export const BoothActions = ({ boothId }: { boothId: string }) => {
         dialogOpen={open}
         setDialogOpen={setOpen}
         boothId={boothId}
+        type="UPDATE"
       />
     </div>
   );

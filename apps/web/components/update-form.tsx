@@ -1,103 +1,30 @@
-"use client";
-
-import * as React from "react";
-import { Button } from "@workspace/ui/components/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@workspace/ui/components/dialog";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@workspace/ui/components/drawer";
+import { deleteTask, fetchBooth, fetchUsers, updateBooth } from "@/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
-import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
-import { Switch } from "@workspace/ui/components/switch";
-import { Textarea } from "@workspace/ui/components/textarea";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteTask, fetchBooth, fetchUsers, updateBooth } from "@/api";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
+import { ComponentProps, useEffect, useState } from "react";
+import { SelectUserWrapper } from "./select-user";
+import { RatingOptions, SelectRatingWrapper } from "./select-rating";
 import { Trash } from "lucide-react";
 import { CreateTaskDialog } from "./create-task";
+import { Textarea } from "@workspace/ui/components/textarea";
+import { Switch } from "@workspace/ui/components/switch";
+import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
 
-export function UpdateDialog({
-  dialogOpen,
-  setDialogOpen,
-  boothId,
-}: {
-  dialogOpen: boolean;
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  boothId: string;
-}) {
-  const isMobile = useIsMobile();
-
-  if (!isMobile) {
-    return (
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Update booth</DialogTitle>
-            <DialogDescription>
-              Make changes to your coding booth here. Click save when
-              you&apos;re done.
-            </DialogDescription>
-          </DialogHeader>
-          <ProfileForm boothId={boothId} />
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  return (
-    <Drawer open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>Update booth</DrawerTitle>
-          <DrawerDescription>
-            Make changes to your coding booth here. Click save when you&apos;re
-            done.
-          </DrawerDescription>
-        </DrawerHeader>
-        <ProfileForm className="px-4" boothId={boothId} />
-        <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  );
-}
-
-function ProfileForm({
+export function UpdateForm({
   className,
   boothId,
-}: React.ComponentProps<"form"> & {
+}: ComponentProps<"form"> & {
   boothId: string;
 }) {
-  const [boothName, setBoothName] = React.useState("");
-  const [intervieweeId, setIntervieweeId] = React.useState<string>();
-  const [rating, setRating] = React.useState<string>();
-  const [review, setReview] = React.useState("");
-  const [passed, setPassed] = React.useState(false);
-  const [tasks, setTasks] = React.useState<any[]>([]);
+  const [boothName, setBoothName] = useState("");
+  const [intervieweeId, setIntervieweeId] = useState<string>();
+  const [rating, setRating] = useState<string>();
+  const [review, setReview] = useState("");
+  const [passed, setPassed] = useState(false);
+  const [tasks, setTasks] = useState<any[]>([]);
 
   const { data: boothDetails, isLoading } = useQuery({
     queryFn: async () => {
@@ -127,7 +54,7 @@ function ProfileForm({
     mutationFn: deleteTask,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTasks([...(boothDetails?.tasks ?? [])]);
   }, [boothDetails?.tasks]);
 
@@ -231,7 +158,8 @@ function ProfileForm({
             });
 
             toast.success("Booth updated!");
-          } catch {
+          } catch (e) {
+            console.error(e);
             toast.error("Couldn't update booth");
           }
         }}
@@ -241,78 +169,3 @@ function ProfileForm({
     </form>
   );
 }
-
-function SelectUserWrapper({
-  placeholder,
-  options,
-  setValue,
-}: {
-  placeholder: string;
-  options: { id: string; email: string }[];
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
-}) {
-  return (
-    <Select
-      onValueChange={(value) => {
-        setValue(value);
-      }}
-    >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder={`Choose ${placeholder}`} />
-      </SelectTrigger>
-      <SelectContent className="max-h-[300px] w-full">
-        {options.map(({ id, email }) => {
-          return (
-            <SelectItem value={id} className="w-full p-2.5">
-              {email}
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
-  );
-}
-
-function SelectRatingWrapper({
-  placeholder,
-  options,
-  setValue,
-}: {
-  placeholder: string;
-  options: string[];
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
-}) {
-  return (
-    <Select
-      onValueChange={(value) => {
-        setValue(value);
-      }}
-    >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder={`Choose ${placeholder}`} />
-      </SelectTrigger>
-      <SelectContent className="max-h-[300px] w-full">
-        {options.map((option) => {
-          return (
-            <SelectItem value={option} className="w-full p-2.5">
-              {option}
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
-  );
-}
-
-const RatingOptions = [
-  "One",
-  "Two",
-  "Three",
-  "Four",
-  "Five",
-  "Six",
-  "Seven",
-  "Eight",
-  "Nine",
-  "Ten",
-];
