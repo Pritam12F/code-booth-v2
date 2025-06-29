@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from '@workspace/db';
+import { prisma, Task } from '@workspace/db';
 import { UpdateBoothDto } from './dto/update-booth.dto';
 
 @Injectable()
@@ -41,8 +41,8 @@ export class BoothsService {
     return boothFetched;
   }
 
-  async deleteBooth(id: string) {
-    await prisma.booth.delete({
+  async deleteBooth(id: number) {
+    await prisma.task.delete({
       where: {
         id,
       },
@@ -98,7 +98,15 @@ export class BoothsService {
       });
 
       await Promise.all(
-        tasks.map((task) => {
+        tasks.map((task: Task) => {
+          if (!task.id) {
+            return prisma.task.create({
+              data: {
+                name: task.name,
+                boothId: task.boothId,
+              },
+            });
+          }
           return prisma.task.update({
             where: {
               boothId: task.boothId,
@@ -112,7 +120,15 @@ export class BoothsService {
       );
     } else if (!review && tasks && tasks.length > 0) {
       await Promise.all(
-        tasks.map((task) => {
+        tasks.map((task: Task) => {
+          if (!task.id) {
+            return prisma.task.create({
+              data: {
+                name: task.name,
+                boothId: task.boothId,
+              },
+            });
+          }
           return prisma.task.update({
             where: {
               boothId: task.boothId,

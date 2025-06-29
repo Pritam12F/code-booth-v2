@@ -57,6 +57,24 @@ export class BoothsController {
     }
   }
 
+  @Delete('task/:id')
+  async deleteBooth(@Param('id') id: string) {
+    try {
+      await this.boothsService.deleteBooth(Number(id));
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Could not delete booth',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
   @Post(':id')
   async updateBooth(
     @Headers() headers: Record<string, string>,
@@ -78,24 +96,6 @@ export class BoothsController {
         HttpStatus.FORBIDDEN,
         {
           cause: err,
-        },
-      );
-    }
-  }
-
-  @Delete(':id')
-  async deleteBooth(@Param('id') id: string) {
-    try {
-      await this.boothsService.deleteBooth(id);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Could not delete booth',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
         },
       );
     }

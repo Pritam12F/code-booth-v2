@@ -100,3 +100,24 @@ export async function updateBooth({
     return null;
   }
 }
+
+export async function deleteTask(taskId: string) {
+  const { email, id } = await getUserDetails();
+  const token = await getJWT(email, id);
+
+  try {
+    const res = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/booths/task/${taskId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return true;
+  } catch (err) {
+    console.error("Error deleting task:", err);
+    return null;
+  }
+}

@@ -25,7 +25,7 @@ import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { Switch } from "@workspace/ui/components/switch";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchBooth, fetchUsers, updateBooth } from "@/api";
+import { deleteTask, fetchBooth, fetchUsers, updateBooth } from "@/api";
 import {
   Select,
   SelectContent,
@@ -33,6 +33,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
+import { Trash } from "lucide-react";
+import { CreateTaskDialog } from "./create-task";
+import { toast } from "sonner";
 
 export function UpdateDialog({
   dialogOpen,
@@ -120,6 +123,10 @@ function ProfileForm({
     mutationFn: updateBooth,
   });
 
+  const { mutateAsync: deleteTaskMutation } = useMutation({
+    mutationFn: deleteTask,
+  });
+
   React.useEffect(() => {
     setTasks([...(boothDetails?.tasks ?? [])]);
   }, [boothDetails?.tasks]);
@@ -158,23 +165,43 @@ function ProfileForm({
       </div>
       {tasks.map((x: any, index: number) => {
         return (
-          <div className="grid gap-3">
+          <div className="space-y-5 flex flex-col" key={x.id}>
             <Label htmlFor="name">Task</Label>
-            <Input
-              type="name"
-              id="name"
-              defaultValue={x.name}
-              onChange={(e) => {
-                const arrIndex = tasks.findIndex((task) => task.id === x.id);
-                tasks[arrIndex] = {
-                  ...tasks[arrIndex],
-                  name: e.target.value,
-                };
-              }}
-            />
+            <div className="flex">
+              <Input
+                type="name"
+                id="name"
+                defaultValue={x.name}
+                onChange={(e) => {
+                  const arrIndex = tasks.findIndex((task) => task.id === x.id);
+                  tasks[arrIndex] = {
+                    ...tasks[arrIndex],
+                    name: e.target.value,
+                  };
+                }}
+              />
+              <div className="flex items-center">
+                <Trash
+                  height={17}
+                  className="ml-3 hover:cursor-pointer hover:text-red-500 transition-all duration-75 delay-75"
+                  onClick={async () => {
+                    const tasksAfterDeletion = tasks.filter(
+                      (task) => task.id !== x.id
+                    );
+                    await deleteTaskMutation(x.id);
+                    setTasks([...tasksAfterDeletion]);
+                  }}
+                />
+              </div>
+            </div>
           </div>
         );
       })}
+      <CreateTaskDialog
+        addTaskHandler={setTasks}
+        tasks={tasks}
+        boothId={boothId}
+      />
       <div className="grid gap-3">
         <Label htmlFor="name">Review</Label>
         <Textarea
@@ -202,8 +229,10 @@ function ProfileForm({
               passed,
               tasks,
             });
+
+            toast.success("Booth updated!");
           } catch {
-            alert("Couldn't update booth");
+            toast.error("Couldn't update booth");
           }
         }}
       >
