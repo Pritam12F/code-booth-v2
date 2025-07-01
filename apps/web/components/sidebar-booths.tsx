@@ -8,16 +8,20 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import { useSession } from "next-auth/react";
 import { BoothActions } from "./sidebar-booth-actions";
 import { Booth } from "@workspace/db";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { CreateForm } from "./create-form";
+import { BoothDialog } from "./booth-dialog";
+import Link from "next/link";
 
 export const SidebarBooths = () => {
-  const { data: session } = useSession();
   const { data: booths, isLoading } = useQuery({
     queryFn: async () => await fetchBooths(),
     queryKey: ["booths"],
   });
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -25,19 +29,31 @@ export const SidebarBooths = () => {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Booths</SidebarGroupLabel>
+      <SidebarGroupLabel className="flex justify-between">
+        <span>Booths</span>
+        <Plus
+          className="cursor-pointer hover:text-white transition-all duration-150"
+          height={20}
+          onClick={() => setIsCreateDialogOpen(true)}
+        />
+      </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {(booths as Booth[]).map((item) => (
             <SidebarMenuItem key={item.id}>
               <SidebarMenuButton asChild>
-                <span>{item.title}</span>
+                <Link href={`/dashboard/${item.id}`}>{item.title}</Link>
               </SidebarMenuButton>
               <BoothActions boothId={item.id} />
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
+      <BoothDialog
+        setDialogOpen={setIsCreateDialogOpen}
+        dialogOpen={isCreateDialogOpen}
+        type="CREATE"
+      />
     </SidebarGroup>
   );
 };

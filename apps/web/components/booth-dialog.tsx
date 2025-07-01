@@ -20,8 +20,9 @@ import {
 } from "@workspace/ui/components/drawer";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { UpdateForm } from "./update-form";
+import { CreateForm } from "./create-form";
 
-export function UpdateDialog({
+export function BoothDialog({
   dialogOpen,
   setDialogOpen,
   boothId,
@@ -49,6 +50,7 @@ export function UpdateDialog({
             </DialogDescription>
           </DialogHeader>
           {boothId && type === "UPDATE" && <UpdateForm boothId={boothId} />}
+          {type === "CREATE" && <CreateForm />}
         </DialogContent>
       </Dialog>
     );
@@ -65,6 +67,7 @@ export function UpdateDialog({
           </DrawerDescription>
         </DrawerHeader>
         {boothId && type === "UPDATE" && <UpdateForm boothId={boothId} />}
+        {type === "CREATE" && <CreateForm />}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

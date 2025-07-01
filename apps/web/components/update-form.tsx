@@ -140,11 +140,12 @@ export function UpdateForm({
           onChange={(e) => setReview(e.target.value)}
         />
       </div>
-      <div className="grid gap-3">
+      <div className="flex flex-row items-center space-x-4">
+        <span>Passed</span>
         <Switch
           checked={passed}
           onCheckedChange={(e) => setPassed(e)}
-          className="bg-white"
+          className="bg-white cursor-pointer"
         />
       </div>
       <Button

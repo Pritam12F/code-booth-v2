@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { BoothsService } from './booths.service';
 import { UpdateBoothDto } from './dto/update-booth.dto';
+import { CreateBoothDTO } from './dto/create-booth.dto';
 
 @Controller('booths')
 export class BoothsController {
@@ -58,9 +59,35 @@ export class BoothsController {
   }
 
   @Delete('task/:id')
+  async deleteTask(@Param('id') id: string) {
+    try {
+      await this.boothsService.deleteTask(Number(id));
+
+      return {
+        message: 'Task deleted!',
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Could not delete task',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Delete(':id')
   async deleteBooth(@Param('id') id: string) {
     try {
-      await this.boothsService.deleteBooth(Number(id));
+      await this.boothsService.deleteBooth(id);
+
+      return {
+        message: 'Booth deleted!',
+      };
     } catch (error) {
       throw new HttpException(
         {
@@ -75,15 +102,15 @@ export class BoothsController {
     }
   }
 
-  @Post(':userI')
+  @Post('create')
   async createBooth(
     @Headers() headers: Record<string, string>,
-    @Body() updateBoothDto: UpdateBoothDto,
+    @Body() createBoothDto: CreateBoothDTO,
   ) {
     try {
       return await this.boothsService.createBooth(
         headers.userId!,
-        updateBoothDto,
+        createBoothDto,
       );
     } catch (err) {
       throw new HttpException(

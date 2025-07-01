@@ -25,7 +25,7 @@ export function SelectUserWrapper({
         <SelectValue placeholder={`Choose ${placeholder}`} />
       </SelectTrigger>
       <SelectContent className="max-h-[300px] w-full">
-        {options.map(({ id, email }) => {
+        {options?.map(({ id, email }) => {
           return (
             <SelectItem value={id} className="w-full p-2.5">
               {email}

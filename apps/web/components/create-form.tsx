@@ -3,7 +3,7 @@ import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
 import { ComponentProps, useState } from "react";
 import { SelectUserWrapper } from "./select-user";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { RatingOptions, SelectRatingWrapper } from "./select-rating";
 import { Trash } from "lucide-react";
 import { CreateTaskDialog } from "./create-task";
@@ -11,13 +11,12 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { Switch } from "@workspace/ui/components/switch";
 import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
+import { createBooth, fetchUsers } from "@/api";
 
-export function ProfileForm({
+export function CreateForm({
   className,
-  boothId,
 }: {
-  className: ComponentProps<"form">;
-  boothId: string;
+  className?: ComponentProps<"form">;
 }) {
   const [boothName, setBoothName] = useState("");
   const [intervieweeId, setIntervieweeId] = useState<string>();
@@ -28,6 +27,21 @@ export function ProfileForm({
 
   const queryClient = useQueryClient();
   const cachedUsers = queryClient.getQueryData(["users"]);
+
+  const { data: allUsers } = useQuery({
+    queryFn: async () => {
+      return fetchUsers();
+    },
+    queryKey: ["users"],
+  });
+
+  const { mutateAsync: createBoothMutation } = useMutation({
+    mutationFn: createBooth,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["booths"] });
+    },
+  });
+
   return (
     <form
       className={cn(
@@ -40,7 +54,7 @@ export function ProfileForm({
         <Input
           type="name"
           id="name"
-          defaultValue={"Frontend Round 2"}
+          placeholder="Enter new booth name"
           onChange={(e) => setBoothName(e.target.value)}
         />
       </div>
@@ -48,7 +62,7 @@ export function ProfileForm({
         <Label htmlFor="name">Interviewee</Label>
         <SelectUserWrapper
           placeholder="interviewee"
-          options={(cachedUsers as any) ?? []}
+          options={(cachedUsers as any) ?? allUsers}
           setValue={setIntervieweeId}
         />
       </div>
@@ -93,11 +107,7 @@ export function ProfileForm({
           </div>
         );
       })}
-      <CreateTaskDialog
-        addTaskHandler={setTasks}
-        tasks={tasks}
-        boothId={boothId}
-      />
+      <CreateTaskDialog addTaskHandler={setTasks} tasks={tasks} />
       <div className="grid gap-3">
         <Label htmlFor="name">Review</Label>
         <Textarea
@@ -114,12 +124,22 @@ export function ProfileForm({
       </div>
       <Button
         type="button"
+        className="cursor-pointer"
         onClick={async () => {
           try {
-            toast.success("Booth updated!");
+            await createBoothMutation({
+              boothName,
+              intervieweeId: intervieweeId!,
+              passed,
+              tasks,
+              review,
+              rating,
+            });
+
+            toast.success("Booth created!");
           } catch (e) {
             console.error(e);
-            toast.error("Couldn't update booth");
+            toast.error("Couldn't create booth");
           }
         }}
       >

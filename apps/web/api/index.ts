@@ -121,3 +121,67 @@ export async function deleteTask(taskId: string) {
     return null;
   }
 }
+
+export async function deleteBooth(boothId: string) {
+  const { email, id } = await getUserDetails();
+  const token = await getJWT(email, id);
+
+  try {
+    const res = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/booths/${boothId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return true;
+  } catch (err) {
+    console.error("Error deleting booth:", err);
+    return null;
+  }
+}
+
+export async function createBooth({
+  boothName,
+  intervieweeId,
+  rating,
+  review,
+  passed,
+  tasks,
+}: {
+  boothName: string;
+  intervieweeId: string;
+  rating?: string;
+  review?: string;
+  passed?: boolean;
+  tasks?: any[];
+}) {
+  const { email, id } = await getUserDetails();
+  const token = await getJWT(email, id);
+
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/booths/create`,
+      {
+        title: boothName,
+        intervieweeId,
+        rating,
+        review,
+        passed,
+        tasks,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    console.error("Error deleting task:", err);
+    return null;
+  }
+}

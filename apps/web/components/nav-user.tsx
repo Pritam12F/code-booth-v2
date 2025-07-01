@@ -85,7 +85,10 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+              onClick={() => {
+                signOut({ redirect: true, callbackUrl: "/" });
+                localStorage.removeItem("cd-token");
+              }}
             >
               <LogOut />
               Log out

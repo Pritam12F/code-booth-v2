@@ -43,23 +43,16 @@ export class BoothsService {
   }
 
   async createBooth(userId: string, createBoothData: CreateBoothDTO) {
-    const {
-      intervieweeId,
-      interviewerId,
-      passed,
-      title,
-      review,
-      rating,
-      tasks,
-    } = createBoothData;
+    const { intervieweeId, passed, title, review, rating, tasks } =
+      createBoothData;
 
-    if (!interviewerId) {
+    if (!userId) {
       throw new Error('Interviewer ID not provided');
     }
 
     const newBooth = await prisma.booth.create({
       data: {
-        interviewerId,
+        interviewerId: userId,
         intervieweeId: intervieweeId!,
         title: title ?? `Example ${Math.random() * 20 + 1}`,
         passed,
@@ -92,8 +85,16 @@ export class BoothsService {
     );
   }
 
-  async deleteBooth(id: number) {
+  async deleteTask(id: number) {
     await prisma.task.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async deleteBooth(id: string) {
+    await prisma.booth.delete({
       where: {
         id,
       },
