@@ -33,6 +33,7 @@ export function CreateForm({
       return fetchUsers();
     },
     queryKey: ["users"],
+    enabled: !cachedUsers,
   });
 
   const { mutateAsync: createBoothMutation } = useMutation({

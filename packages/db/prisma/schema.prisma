@@ -33,6 +33,9 @@ model Booth {
   intervieweeId String
   title         String
   passed        Boolean @default(false)
+  html          String?
+  css           String?
+  javascript    String?
   tasks         Task[]
   review        Review?
   rating        Rating?

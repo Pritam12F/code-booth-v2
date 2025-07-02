@@ -26,6 +26,7 @@ export function UpdateForm({
   const [passed, setPassed] = useState(false);
   const [tasks, setTasks] = useState<any[]>([]);
   const queryClient = useQueryClient();
+  const cachedUsers = queryClient.getQueryData(["users"]);
 
   const { data: boothDetails, isLoading } = useQuery({
     queryFn: async () => {
@@ -45,6 +46,7 @@ export function UpdateForm({
       return fetchUsers();
     },
     queryKey: ["users"],
+    enabled: !cachedUsers,
   });
 
   const { mutateAsync: updateBoothMutation } = useMutation({
@@ -82,7 +84,7 @@ export function UpdateForm({
         <Label htmlFor="name">Interviewee</Label>
         <SelectUserWrapper
           placeholder="interviewee"
-          options={allUsers ?? []}
+          options={(cachedUsers as any[]) ?? allUsers}
           setValue={setIntervieweeId}
         />
       </div>

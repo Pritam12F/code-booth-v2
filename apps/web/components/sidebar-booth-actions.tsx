@@ -13,7 +13,15 @@ import { BoothDialog } from "./booth-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteBooth } from "@/api";
 
-export const BoothActions = ({ boothId }: { boothId: string }) => {
+export const BoothActions = ({
+  boothId,
+  userId,
+  interviewerId,
+}: {
+  boothId: string;
+  userId: string;
+  interviewerId: string;
+}) => {
   const [open, setOpen] = useState<boolean>(false);
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
@@ -43,25 +51,29 @@ export const BoothActions = ({ boothId }: { boothId: string }) => {
             <Link className="text-muted-foreground" />
             <span>Copy Link</span>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setOpen(true);
-            }}
-            className="cursor-pointer"
-          >
-            <Edit className="text-muted-foreground" />
-            Update Booth
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={async () => {
-              await deleteBoothHandler(boothId);
-            }}
-            className="cursor-pointer"
-          >
-            <Trash2 className="text-red-500" />
-            <span>Delete</span>
-          </DropdownMenuItem>
+          {userId === interviewerId && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpen(true);
+                }}
+                className="cursor-pointer"
+              >
+                <Edit className="text-muted-foreground" />
+                Update Booth
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => {
+                  await deleteBoothHandler(boothId);
+                }}
+                className="cursor-pointer"
+              >
+                <Trash2 className="text-red-500" />
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <BoothDialog

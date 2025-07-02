@@ -12,15 +12,16 @@ import { BoothActions } from "./sidebar-booth-actions";
 import { Booth } from "@workspace/db";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { CreateForm } from "./create-form";
 import { BoothDialog } from "./booth-dialog";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export const SidebarBooths = () => {
   const { data: booths, isLoading } = useQuery({
     queryFn: async () => await fetchBooths(),
     queryKey: ["booths"],
   });
+  const { data: session } = useSession();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   if (isLoading) {
@@ -44,7 +45,11 @@ export const SidebarBooths = () => {
               <SidebarMenuButton asChild>
                 <Link href={`/dashboard/${item.id}`}>{item.title}</Link>
               </SidebarMenuButton>
-              <BoothActions boothId={item.id} />
+              <BoothActions
+                boothId={item.id}
+                userId={session?.user.id!}
+                interviewerId={item.interviewerId}
+              />
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
