@@ -1,3 +1,9 @@
+import { EditorWrapper } from "@/components/editor";
+
 export default function BoothPage() {
-  return <></>;
+  return (
+    <div>
+      <EditorWrapper />
+    </div>
+  );
 }

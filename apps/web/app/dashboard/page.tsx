@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { fetchBooths } from "@/api";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DashboardPage() {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <>
-      <button onClick={() => setIsOpen(true)}>click me</button>
-    </>
-  );
+  const { data: booths } = useQuery({
+    queryFn: async () => await fetchBooths(),
+    queryKey: ["booths"],
+  });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (booths) {
+      router.push(`/dashboard/${booths?.[0].id}`);
+    }
+  }, [booths]);
+
+  return null;
 }
