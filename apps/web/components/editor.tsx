@@ -8,66 +8,115 @@ import {
 } from "@workspace/ui/components/tabs";
 import Editor from "@monaco-editor/react";
 import { useCodeContext } from "./context/code/code-context";
-import { useSidebarOpenContext } from "./context/sidebar/sidebar-context";
+import { Code, Palette, Zap } from "lucide-react";
 
 export const EditorWrapper = () => {
   const { html, css, javascript, setHtml, setCss, setJavascript } =
     useCodeContext();
 
-  const { isOpen } = useSidebarOpenContext();
-
   return (
-    <Tabs defaultValue="html" className={`w-[45%]`}>
-      <TabsList className="mx-auto my-5">
-        <TabsTrigger value="html" className="cursor-pointer">
-          HTML
-        </TabsTrigger>
-        <TabsTrigger value="css" className="cursor-pointer">
-          CSS
-        </TabsTrigger>
-        <TabsTrigger value="javascript" className="cursor-pointer">
-          Javascript
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="html" className="ml-5 pb-7">
-        <Editor
-          height="90vh"
-          width="42vw"
-          defaultLanguage="html"
-          defaultValue=""
-          theme="vs-dark"
-          onChange={(e) => {
-            setHtml(e);
-          }}
-          value={html}
-        />
-      </TabsContent>
-      <TabsContent value="css" className="ml-5 pb-7">
-        <Editor
-          height="90vh"
-          width="42vw"
-          defaultLanguage="css"
-          defaultValue=""
-          theme="vs-dark"
-          onChange={(e) => {
-            setCss(e);
-          }}
-          value={css}
-        />
-      </TabsContent>
-      <TabsContent value="javascript" className="ml-5 pb-7">
-        <Editor
-          height="90vh"
-          width="42vw"
-          defaultLanguage="javascript"
-          defaultValue="// some comment"
-          theme="vs-dark"
-          onChange={(e) => {
-            setJavascript(e);
-          }}
-          value={javascript}
-        />
-      </TabsContent>
-    </Tabs>
+    <div className="h-full flex flex-col bg-black rounded-xl shadow-lg border overflow-hidden">
+      <div className="bg-gray-900 px-6 py-4 border-b">
+        <h2 className="text-white font-semibold text-lg flex items-center gap-2">
+          <Code className="w-5 h-5" />
+          Code Editor
+        </h2>
+      </div>
+
+      <Tabs defaultValue="html" className="flex-1 flex flex-col">
+        <TabsList className="grid w-full grid-cols-3 bg-black max-w-[400px] py-1 m-4 rounded-lg">
+          <TabsTrigger
+            value="html"
+            className="flex items-center gap-2 data-[state=active]:bg-black data-[state=active]:shadow-sm cursor-pointer"
+          >
+            <Code className="w-4 h-4" />
+            HTML
+          </TabsTrigger>
+          <TabsTrigger
+            value="css"
+            className="flex items-center gap-2 data-[state=active]:bg-black
+             data-[state=active]:shadow-sm cursor-pointer"
+          >
+            <Palette className="w-4 h-4" />
+            CSS
+          </TabsTrigger>
+          <TabsTrigger
+            value="javascript"
+            className="flex items-center gap-2 data-[state=active]:bg-black data-[state=active]:shadow-sm cursor-pointer"
+          >
+            <Zap className="w-4 h-4" />
+            JavaScript
+          </TabsTrigger>
+        </TabsList>
+
+        <div className="flex-1 px-4 pb-4">
+          <TabsContent value="html" className="h-full mt-0">
+            <div className="h-full rounded-lg overflow-hidden border">
+              <Editor
+                height="100%"
+                defaultLanguage="html"
+                defaultValue="<!-- Start coding your HTML here -->"
+                theme="vs-dark"
+                onChange={(value) => setHtml(value || "")}
+                value={html}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: "on",
+                  roundedSelection: false,
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  padding: { top: 16, bottom: 16 },
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="css" className="h-full mt-0">
+            <div className="h-full rounded-lg overflow-hidden border">
+              <Editor
+                height="100%"
+                defaultLanguage="css"
+                defaultValue="/* Add your styles here */"
+                theme="vs-dark"
+                onChange={(value) => setCss(value || "")}
+                value={css}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: "on",
+                  roundedSelection: false,
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  padding: { top: 16, bottom: 16 },
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="javascript" className="h-full mt-0">
+            <div className="h-full rounded-lg overflow-hidden border">
+              <Editor
+                height="100%"
+                defaultLanguage="javascript"
+                defaultValue="// Write your JavaScript here"
+                theme="vs-dark"
+                onChange={(value) => setJavascript(value || "")}
+                value={javascript}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: "on",
+                  roundedSelection: false,
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  padding: { top: 16, bottom: 16 },
+                }}
+              />
+            </div>
+          </TabsContent>
+        </div>
+      </Tabs>
+    </div>
   );
 };
