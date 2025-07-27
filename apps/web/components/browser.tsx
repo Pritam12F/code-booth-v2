@@ -59,7 +59,7 @@ export const Browser = () => {
   }, [html, css, javascript]);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-xl shadow-lg border overflow-hidden">
+    <div className="h-full flex flex-col bg-white rounded-md shadow-lg border overflow-hidden">
       <div className="bg-gray-900 px-6 py-4 border-b flex items-center justify-between">
         <h2 className="text-white font-semibold text-lg flex items-center gap-2">
           <Monitor className="w-5 h-5" />

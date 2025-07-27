@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { prisma, Rating, Task } from '@workspace/db';
 import { UpdateBoothDto } from './dto/update-booth.dto';
 import { CreateBoothDTO } from './dto/create-booth.dto';
+import { S3Client, ListBucketsCommand } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class BoothsService {

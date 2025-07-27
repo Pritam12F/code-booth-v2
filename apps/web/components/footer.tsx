@@ -1,3 +1,4 @@
+import { Code2, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
@@ -8,14 +9,17 @@ export default function Footer() {
       <div className="mx-auto px-4 py-8 md:py-12">
         <div className="grid grid-cols-11 gap-y-6 sm:gap-y-0 sm:grid-cols-12">
           <div className="ml-4 col-span-9 sm:mx-5 sm:col-span-5 md:col-span-6 lg:col-span-6">
-            <Link href={"/"} className="cursor-pointer">
-              <Image
-                src={"/brand.png"}
-                width={150}
-                height={150}
-                alt="brand_logo"
-                className="object-fit lg:ml-10"
-              />
+            <Link
+              href={"/"}
+              className="flex items-center space-x-2.5 ml-1"
+              style={{ cursor: "pointer" }}
+            >
+              <div className="flex relative rounded-lg p-2 bg-gradient-to-br from-blue-500 to-purple-600">
+                <Code2 className="-scale-90 text-white" />
+              </div>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+                <h1 className="text-[20px] font-semibold">CodeBooth</h1>
+              </span>
             </Link>
           </div>
           <div className="ml-5 sm:-ml-3 mt-3 sm:-mt-1 col-span-9 sm:col-span-4 md:col-span-3 lg:col-span-4">
@@ -26,7 +30,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="#"
-                  className="text-gray-600 dark:text-gray-400 duration-300 hover:text-blue-600 dark:hover:text-blue-500"
+                  className="text-gray-600 dark:text-gray-400 duration-300 hover:text-purple-700 dark:hover:text-purple-500"
                 >
                   Privacy Policy
                 </Link>
@@ -34,7 +38,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="#"
-                  className="text-gray-600 dark:text-gray-400 duration-300 hover:text-blue-600 dark:hover:text-blue-500"
+                  className="text-gray-600 dark:text-gray-400 duration-300 hover:text-purple-700 dark:hover:text-purple-600"
                 >
                   Terms & Conditions
                 </Link>
@@ -48,21 +52,21 @@ export default function Footer() {
             <div className="flex space-x-4">
               <Link
                 href="#"
-                className="text-gray-600 duration-300 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-500"
+                className="text-gray-600 duration-300 hover:text-purple-700 dark:text-gray-400 dark:hover:text-purple-600"
               >
                 <FaDiscord className="w-6 h-6" />
                 <span className="sr-only">Discord</span>
               </Link>
               <Link
                 href="https://github.com/Pritam12F/"
-                className="text-gray-600 duration-300 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-500"
+                className="text-gray-600 duration-300 hover:text-blue-700 dark:text-gray-400 dark:hover:text-purple-600"
               >
                 <FaGithub className="w-6 h-6" />
                 <span className="sr-only">GitHub</span>
               </Link>
               <Link
                 href="https://x.com/pritam121f"
-                className="text-gray-600 duration-300 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-500"
+                className="text-gray-600 duration-300 hover:text-blue-700 dark:text-gray-400 dark:hover:text-purple-600"
               >
                 <FaTwitter className="w-6 h-6" />
                 <span className="sr-only">Twitter</span>

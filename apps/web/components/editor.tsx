@@ -9,18 +9,22 @@ import {
 import Editor from "@monaco-editor/react";
 import { useCodeContext } from "./context/code/code-context";
 import { Code, Palette, Zap } from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
 
 export const EditorWrapper = () => {
   const { html, css, javascript, setHtml, setCss, setJavascript } =
     useCodeContext();
 
   return (
-    <div className="h-full flex flex-col bg-black rounded-xl shadow-lg border overflow-hidden">
-      <div className="bg-gray-900 px-6 py-4 border-b">
+    <div className="h-full flex flex-col bg-black rounded-md shadow-lg border overflow-hidden">
+      <div className="flex justify-between bg-gray-900 px-6 py-4 border-b">
         <h2 className="text-white font-semibold text-lg flex items-center gap-2">
           <Code className="w-5 h-5" />
           Code Editor
         </h2>
+        <Button variant={"secondary"} className="cursor-pointer">
+          Submit
+        </Button>
       </div>
 
       <Tabs defaultValue="html" className="flex-1 flex flex-col">

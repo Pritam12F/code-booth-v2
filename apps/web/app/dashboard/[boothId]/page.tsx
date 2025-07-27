@@ -13,7 +13,7 @@ export default function BoothPage() {
       <div
         className={cn(
           "mx-auto flex gap-6 h-[calc(100vh-3rem)]",
-          isOpen ? "min-w-[1170px]" : "min-w-[1420px]"
+          isOpen ? "min-w-[1160px]" : "min-w-[1420px]"
         )}
       >
         <div className="flex-1 min-w-0">

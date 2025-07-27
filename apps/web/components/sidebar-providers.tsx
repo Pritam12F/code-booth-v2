@@ -21,6 +21,7 @@ export function SidebarProviderWrapper({
         <AppSidebar />
         <main>
           <SidebarTrigger
+            className="w-7 h-7 m-2"
             onClick={() => {
               setIsOpen((c) => !c);
             }}

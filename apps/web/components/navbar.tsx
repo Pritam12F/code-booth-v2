@@ -10,7 +10,7 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@workspace/ui/components/resizable-navbar";
-import Image from "next/image";
+import { Code2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -37,15 +37,7 @@ export default function NavbarComp() {
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
-          <Link href={"/"}>
-            <Image
-              src={"/brand.png"}
-              width={150}
-              height={150}
-              alt="brand_logo"
-              className="object-fit"
-            />
-          </Link>
+          <Logo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <NavbarButton
@@ -68,15 +60,7 @@ export default function NavbarComp() {
         {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
-            <Link href={"/"} className="ml-1">
-              <Image
-                src={"/brand.png"}
-                width={150}
-                height={150}
-                alt="brand_logo"
-                className="object-fit"
-              />
-            </Link>
+            <Logo />
             <MobileNavToggle
               isOpen={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -119,3 +103,23 @@ export default function NavbarComp() {
     </div>
   );
 }
+
+export const Logo = () => {
+  return (
+    <Link
+      href={"/"}
+      className="flex items-start space-x-2.5 ml-1"
+      style={{ cursor: "pointer" }}
+    >
+      <div className="flex relative rounded-lg p-2 bg-gradient-to-br from-blue-500 to-purple-600">
+        <Code2 className="-scale-90 text-white" />
+        <span className="bg-gradient-to-r from-pink-500 to-orange-500 absolute inset-0 left-7 -top-1 rounded-full h-[16px] w-[16px] p-1">
+          <Sparkles className="w-2 h-2 text-white" />
+        </span>
+      </div>
+      <span className="text-transparent -translate-y-[1px] bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+        <h1 className="text-[20px] font-semibold">CodeBooth</h1>
+      </span>
+    </Link>
+  );
+};
