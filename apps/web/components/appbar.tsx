@@ -11,14 +11,14 @@ export const AppBar = () => {
     useAppbarContext();
 
   return (
-    <div className="w-full flex justify-around">
+    <div className="w-full flex border-b justify-between">
       <div className="relative py-4 px-10">
         <Logo />
         <p className="absolute mt-[2px] tracking-wide inset-0 left-[95px] top-[40px] text-xs text-muted-foreground font-medium">
           Personal IDE
         </p>
       </div>
-      <div className="flex items-center space-x-10">
+      <div className="flex items-center space-x-10 translate-x-18">
         <Folder
           onClick={() => setSideBarOpen((prev) => !prev)}
           className="w-8 h-8 hover:bg-gray-800 p-2 rounded-lg cursor-pointer transition-all duration-200"
@@ -32,7 +32,7 @@ export const AppBar = () => {
           className="w-8 h-8 hover:bg-gray-800 p-2 rounded-lg cursor-pointer transition-all duration-200"
         />
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center mx-5 space-x-4">
         <Moon className="w-8 h-8 hover:bg-gray-800 p-2 rounded-lg cursor-pointer transition-all duration-200" />
         <div className="w-px h-6 bg-border" />
         <Badge variant={"secondary"}>HTML/CSS/JS</Badge>
