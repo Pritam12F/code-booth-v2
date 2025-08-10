@@ -4,9 +4,9 @@ import { Plus, Search } from "lucide-react";
 import React from "react";
 
 export default function SidebarHeader({
-  title = "Portfolio Website",
-  description = "qweqwe qweqweqw qewqeqwe",
-  icon = "🎨",
+  title,
+  description,
+  icon,
   type,
 }: Booth) {
   const concatIndex = type === "REACT" ? 24 : 14;
