@@ -1,5 +1,10 @@
-import { SidebarProviderWrapper } from "@/components/sidebar-providers";
+import { AppBar } from "@/components/appbar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <SidebarProviderWrapper>{children}</SidebarProviderWrapper>;
+  return (
+    <div>
+      <AppBar />
+      {children}
+    </div>
+  );
 }
