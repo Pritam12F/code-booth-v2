@@ -1,5 +1,4 @@
-import { Code2, Sparkles } from "lucide-react";
-import Image from "next/image";
+import { Code2 } from "lucide-react";
 import Link from "next/link";
 import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 

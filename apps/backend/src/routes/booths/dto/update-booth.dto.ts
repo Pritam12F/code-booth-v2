@@ -15,6 +15,18 @@ export class UpdateBoothDto {
 
   @IsString()
   @IsOptional()
+  readonly description?: string;
+
+  @IsString()
+  @IsOptional()
+  readonly icon?: string;
+
+  @IsString()
+  @IsOptional()
+  readonly type?: 'HTML_CSS_JS' | 'REACT';
+
+  @IsString()
+  @IsOptional()
   readonly review?: string;
 
   @IsString()

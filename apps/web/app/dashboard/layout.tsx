@@ -1,10 +1,14 @@
 import { AppBar } from "@/components/appbar";
+import Sidebar from "@/components/sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <div className="bg-black">
       <AppBar />
-      {children}
+      <div className="flex">
+        <Sidebar />
+        {children}
+      </div>
     </div>
   );
 }

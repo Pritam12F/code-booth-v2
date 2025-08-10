@@ -32,10 +32,11 @@ model Booth {
   interviewee   User    @relation("IntervieweeRelation", fields: [intervieweeId], references: [id], onDelete: Cascade)
   intervieweeId String
   title         String
+  description   String?
+  icon          String?
   passed        Boolean @default(false)
-  html          String?
-  css           String?
-  javascript    String?
+  type          BoothType
+  url           String?
   tasks         Task[]
   review        Review?
   rating        Rating?
@@ -86,4 +87,9 @@ enum RatingType {
 enum AccountType {
   CREDENTIALS
   SOCIALS
+}
+
+enum BoothType {
+  HTML_CSS_JS
+  REACT
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { prisma, Rating, Task } from '@workspace/db';
 import { UpdateBoothDto } from './dto/update-booth.dto';
 import { CreateBoothDTO } from './dto/create-booth.dto';
-import { S3Client, ListBucketsCommand } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class BoothsService {
@@ -44,8 +43,7 @@ export class BoothsService {
   }
 
   async createBooth(userId: string, createBoothData: CreateBoothDTO) {
-    const { intervieweeId, passed, title, review, rating, tasks } =
-      createBoothData;
+    const { intervieweeId, title, tasks, description, type } = createBoothData;
 
     if (!userId) {
       throw new Error('Interviewer ID not provided');
@@ -56,21 +54,8 @@ export class BoothsService {
         interviewerId: userId,
         intervieweeId: intervieweeId!,
         title: title ?? `Example ${Math.random() * 20 + 1}`,
-        passed,
-      },
-    });
-
-    await prisma.review.create({
-      data: {
-        boothId: newBooth.id,
-        content: review,
-      },
-    });
-
-    await prisma.rating.create({
-      data: {
-        boothId: newBooth.id,
-        content: rating as Pick<Rating, 'content'>['content'],
+        description,
+        type,
       },
     });
 
@@ -121,16 +106,36 @@ export class BoothsService {
       );
     }
 
-    const { title, intervieweeId, passed, tasks, review, rating } = updateData;
+    const {
+      title,
+      intervieweeId,
+      passed,
+      tasks,
+      review,
+      rating,
+      description,
+      type,
+    } = updateData;
 
-    if (!title && !intervieweeId && !passed && !tasks && !review && !rating) {
+    if (
+      !title &&
+      !intervieweeId &&
+      !passed &&
+      !tasks &&
+      !review &&
+      !rating &&
+      !description &&
+      !type
+    ) {
       throw new Error('No data to update');
     }
 
     const dataBooth = {
-      title: title,
-      intervieweeId: intervieweeId,
-      passed: passed,
+      title,
+      intervieweeId,
+      passed,
+      type,
+      description,
     };
 
     await prisma.booth.update({
@@ -150,17 +155,21 @@ export class BoothsService {
         },
       });
     }
+
+    if (rating) {
+      await prisma.rating.update({
+        where: {
+          boothId: boothId,
+        },
+        data: {
+          content: rating as Pick<Rating, 'content'>['content'],
+        },
+      });
+    }
+
     if (tasks && tasks.length > 0) {
       await Promise.all(
         tasks.map((task: Task) => {
-          if (!task.id) {
-            return prisma.task.create({
-              data: {
-                name: task.name,
-                boothId: task.boothId,
-              },
-            });
-          }
           return prisma.task.update({
             where: {
               boothId: task.boothId,
@@ -173,16 +182,7 @@ export class BoothsService {
         }),
       );
     }
-    if (rating) {
-      await prisma.rating.update({
-        where: {
-          boothId: boothId,
-        },
-        data: {
-          content: rating as Pick<Rating, 'content'>['content'],
-        },
-      });
-    }
+
     return {
       message: `Booth ${boothId} updated successfully`,
     };

@@ -1,23 +1,25 @@
-import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateBoothDTO {
   @IsString()
+  @IsOptional()
   readonly intervieweeId?: string;
 
   @IsString()
-  readonly title?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  readonly passed?: boolean;
+  @IsNotEmpty()
+  readonly title!: string;
 
   @IsString()
   @IsOptional()
-  readonly review?: string;
+  readonly icon?: string;
 
   @IsString()
   @IsOptional()
-  readonly rating?: string;
+  readonly description!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly type!: 'HTML_CSS_JS' | 'REACT';
 
   @IsArray()
   @IsOptional()
