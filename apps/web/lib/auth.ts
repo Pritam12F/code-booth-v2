@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { prisma } from "@workspace/db";
+import { createTenBooths } from "@workspace/db/seed-booth";
 
 export const authOptions = {
   providers: [
@@ -105,6 +106,8 @@ export const authOptions = {
                   : "CREDENTIALS",
             },
           });
+
+          await createTenBooths(insertedUser.id);
 
           user.id = insertedUser.id;
         } else if (isUserInDB && isUserInDB.accountType === "CREDENTIALS") {

@@ -1,14 +1,32 @@
 "use client";
 
-import { FileText, Folder, Moon, Play, Share2, Terminal } from "lucide-react";
+import {
+  FileText,
+  Folder,
+  LogOut,
+  Moon,
+  Play,
+  Share2,
+  Terminal,
+  User,
+} from "lucide-react";
 import { Logo } from "./navbar";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { useAppbarContext } from "./context/appbar/appbar-context";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu";
+import { Dispatch, SetStateAction, useState } from "react";
+import { signOut } from "next-auth/react";
 
 export const AppBar = () => {
   const { setSideBarOpen, setFileTreeOpen, setTerminalOpen } =
     useAppbarContext();
+  const [isUserDropDownOpen, setIsUserDropDownOpen] = useState(false);
 
   return (
     <div className="w-full flex border-b justify-between">
@@ -41,7 +59,48 @@ export const AppBar = () => {
           <div>Run Code</div>
         </Button>
         <Share2 className="w-8 h-8 hover:bg-gray-800 p-2 rounded-lg cursor-pointer transition-all duration-200" />
+        <UserDropdown
+          setIsOpen={setIsUserDropDownOpen}
+          isOpen={isUserDropDownOpen}
+        >
+          <User className="w-8 h-8 hover:bg-gray-800 p-2 rounded-lg cursor-pointer transition-all duration-200" />
+        </UserDropdown>
       </div>
     </div>
   );
 };
+
+function UserDropdown({
+  children,
+  isOpen,
+  setIsOpen,
+}: {
+  children: React.ReactNode;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}) {
+  return (
+    <DropdownMenu
+      open={isOpen}
+      onOpenChange={(e) => {
+        setIsOpen(e);
+      }}
+    >
+      <DropdownMenuTrigger onClick={() => setIsOpen(true)}>
+        {children}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="mx-2">
+        <DropdownMenuItem
+          onClick={() => {
+            signOut();
+            localStorage.removeItem("cd-token");
+          }}
+          className="cursor-pointer space-x-1 flex items-center"
+        >
+          <LogOut />
+          <div>Log Out</div>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

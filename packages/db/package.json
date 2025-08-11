@@ -22,6 +22,7 @@
     "prisma": "^6.8.2"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./seed-booth": "./src/seed-booths.ts"
   }
 }

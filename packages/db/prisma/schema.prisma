@@ -29,8 +29,8 @@ model Booth {
   id            String  @id @default(cuid())
   interviewer   User    @relation("InterviewerRelation", fields: [interviewerId], references: [id], onDelete: Cascade)
   interviewerId String
-  interviewee   User    @relation("IntervieweeRelation", fields: [intervieweeId], references: [id], onDelete: Cascade)
-  intervieweeId String
+  interviewee   User?    @relation("IntervieweeRelation", fields: [intervieweeId], references: [id], onDelete: Cascade)
+  intervieweeId String?
   title         String
   description   String?
   icon          String?

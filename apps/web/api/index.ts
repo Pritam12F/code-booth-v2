@@ -1,7 +1,8 @@
 import { getJWT, getUserDetails } from "@/lib/user-details";
+import { Booth } from "@workspace/db";
 import axios from "axios";
 
-export async function fetchBooths() {
+export async function fetchBooths(): Promise<Booth[]> {
   const { email, id } = await getUserDetails();
   const token = await getJWT(email, id);
 

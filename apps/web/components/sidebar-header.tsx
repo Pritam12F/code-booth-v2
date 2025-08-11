@@ -1,15 +1,14 @@
 import { Booth } from "@workspace/db";
 import { Badge } from "@workspace/ui/components/badge";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, User } from "lucide-react";
 import React from "react";
 
 export default function SidebarHeader({
-  title,
-  description,
-  icon,
-  type,
-}: Booth) {
-  const concatIndex = type === "REACT" ? 24 : 14;
+  selectedBooth,
+}: {
+  selectedBooth: Booth;
+}) {
+  const concatIndex = selectedBooth.type === "REACT" ? 24 : 14;
   return (
     <div className="flex flex-col p-4 border-b">
       <div className="flex justify-between items-center">
@@ -21,24 +20,26 @@ export default function SidebarHeader({
       </div>
       <div className="flex bg-[#18181b] mt-4 justify-between rounded-md p-4 h-[70px]">
         <div className="flex">
-          <div className="text-3xl flex items-center">{icon}</div>
+          <div className="text-3xl flex items-center">{selectedBooth.icon}</div>
           <div className="mx-2">
             <div className="text-sm font-semibold">
-              {title.length > concatIndex
-                ? title.slice(0, concatIndex).concat("...")
-                : title}
+              {selectedBooth.title.length > concatIndex
+                ? selectedBooth.title.slice(0, concatIndex).concat("...")
+                : selectedBooth.title}
             </div>
-            {description && (
+            {selectedBooth.description && (
               <div className="text-xs">
-                {description.length > concatIndex
-                  ? description.slice(0, concatIndex).concat("...")
-                  : description}
+                {selectedBooth.description.length > concatIndex
+                  ? selectedBooth.description
+                      .slice(0, concatIndex)
+                      .concat("...")
+                  : selectedBooth.description}
               </div>
             )}
           </div>
         </div>
         <Badge variant={"outline"} className="h-fit px-1.5 rounded-full">
-          {type === "REACT" ? "React" : "HTML/CSS/JS"}
+          {selectedBooth.type === "REACT" ? "React" : "HTML/CSS/JS"}
         </Badge>
       </div>
     </div>
