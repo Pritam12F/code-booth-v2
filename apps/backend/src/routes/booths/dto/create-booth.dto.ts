@@ -11,7 +11,7 @@ export class CreateBoothDTO {
 
   @IsString()
   @IsOptional()
-  readonly icon?: string;
+  readonly emoji?: string;
 
   @IsString()
   @IsOptional()

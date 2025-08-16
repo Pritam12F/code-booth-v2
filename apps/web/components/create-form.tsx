@@ -2,17 +2,15 @@ import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
 import { ComponentProps, useState } from "react";
-import { SelectUserWrapper } from "./select-user";
+import { SelectWrapper } from "./select-user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { RatingOptions, SelectRatingWrapper } from "./select-rating";
 import { Trash } from "lucide-react";
 import { CreateTaskDialog } from "./create-task";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { Switch } from "@workspace/ui/components/switch";
 import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
 import { createBooth, fetchUsers } from "@/api";
-import EmojiPicker from "emoji-picker-react";
+import EmojiPicker from "./emoji-picker";
 
 export function CreateForm({
   className,
@@ -20,11 +18,12 @@ export function CreateForm({
   className?: ComponentProps<"form">;
 }) {
   const [boothName, setBoothName] = useState("");
+  const [boothDescripton, setBoothDescription] = useState("");
   const [intervieweeId, setIntervieweeId] = useState<string>();
-  const [rating, setRating] = useState<string>();
-  const [review, setReview] = useState("");
-  const [passed, setPassed] = useState(false);
   const [tasks, setTasks] = useState<any[]>([]);
+  const [emoji, setEmoji] = useState("✅");
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const [workspaceType, setWorkspaceType] = useState<string>();
 
   const queryClient = useQueryClient();
   const cachedUsers = queryClient.getQueryData(["users"]);
@@ -61,19 +60,25 @@ export function CreateForm({
         />
       </div>
       <div className="grid gap-3">
-        <Label htmlFor="name">Interviewee</Label>
-        <SelectUserWrapper
-          placeholder="interviewee"
-          options={(cachedUsers as any) ?? allUsers}
-          setValue={setIntervieweeId}
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          className="resize-none h-24"
+          placeholder="Enter new booth description"
+          onChange={(e) => setBoothDescription(e.target.value)}
         />
       </div>
       <div className="grid gap-3">
-        <Label htmlFor="name">Rating</Label>
-        <SelectRatingWrapper
-          placeholder="rating"
-          options={RatingOptions}
-          setValue={setRating}
+        <Label htmlFor="name">Interviewee</Label>
+        <SelectWrapper
+          placeholder="interviewee"
+          options={((cachedUsers as any) ?? allUsers)?.map(
+            ({ id, email }: { id: string; email: string }) => ({
+              id,
+              label: email,
+            })
+          )}
+          setValue={setIntervieweeId}
         />
       </div>
       {tasks.map((x: any, index: number) => {
@@ -111,20 +116,35 @@ export function CreateForm({
       })}
       <CreateTaskDialog addTaskHandler={setTasks} tasks={tasks} />
       <div className="grid gap-3">
-        <Label htmlFor="name">Review</Label>
-        <Textarea
-          defaultValue={"Enter your review"}
-          onChange={(e) => setReview(e.target.value)}
+        <Label htmlFor="type">Workspace Type</Label>
+        <SelectWrapper
+          placeholder="workspace type"
+          options={[
+            { id: "HTML_CSS_JS", label: "HTML/CSS/JS" },
+            {
+              id: "REACT",
+              label: "React",
+            },
+          ]}
+          setValue={setWorkspaceType}
         />
       </div>
-      <div className="grid gap-3">
-        <Switch
-          checked={passed}
-          onCheckedChange={(e) => setPassed(e)}
-          className="bg-white"
+      <div className="grid gap-5">
+        <div className="text-[14px] font-medium">Emoji</div>
+        <div
+          onClick={() => {
+            setEmojiPickerOpen(true);
+          }}
+          className="text-4xl cursor-pointer"
+        >
+          {emoji}
+        </div>
+        <EmojiPicker
+          setEmoji={setEmoji}
+          isOpen={emojiPickerOpen}
+          setIsOpen={setEmojiPickerOpen}
         />
       </div>
-      <EmojiPicker />
       <Button
         type="button"
         className="cursor-pointer"
@@ -133,10 +153,10 @@ export function CreateForm({
             await createBoothMutation({
               boothName,
               intervieweeId: intervieweeId!,
-              passed,
+              emoji,
+              description: boothDescripton,
               tasks,
-              review,
-              rating,
+              type: workspaceType!,
             });
 
             toast.success("Booth created!");

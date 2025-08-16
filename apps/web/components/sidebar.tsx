@@ -12,12 +12,13 @@ import { Booth } from "@workspace/db";
 
 export default function Sidebar() {
   const { sideBarOpen } = useAppbarContext();
-  const { data: session } = useSession();
   const { data: booths } = useQuery({
     queryFn: async () => await fetchBooths(),
     queryKey: ["booths"],
   });
-  const [selectedBooth, setSelectedBooth] = useState<Booth>(booths?.[0]!);
+  const [selectedBooth, setSelectedBooth] = useState<Booth>(
+    booths?.booths?.[0]!
+  );
 
   const handleBoothChange = (booth: Booth) => {
     setSelectedBooth(booth);
@@ -31,15 +32,11 @@ export default function Sidebar() {
     <div className="w-80 border-r">
       {selectedBooth && <SidebarHeader selectedBooth={selectedBooth} />}
       <OwnedBooths
-        booths={booths?.filter(
-          (booth) => booth.interviewerId === session?.user.id
-        )}
+        booths={booths?.booths}
         handleBoothChange={handleBoothChange}
       />
       <AssignedBooths
-        booths={booths?.filter(
-          (booth) => booth.interviewerId !== session?.user.id
-        )}
+        booths={booths?.participatedBooths}
         changeBoothHanlder={handleBoothChange}
       />
     </div>

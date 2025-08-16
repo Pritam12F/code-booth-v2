@@ -43,7 +43,8 @@ export class BoothsService {
   }
 
   async createBooth(userId: string, createBoothData: CreateBoothDTO) {
-    const { intervieweeId, title, tasks, description, type } = createBoothData;
+    const { intervieweeId, title, tasks, description, type, emoji } =
+      createBoothData;
 
     if (!userId) {
       throw new Error('Interviewer ID not provided');
@@ -56,6 +57,7 @@ export class BoothsService {
         title: title ?? `Example ${Math.random() * 20 + 1}`,
         description,
         type,
+        icon: emoji,
       },
     });
 

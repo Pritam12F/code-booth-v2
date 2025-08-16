@@ -2,7 +2,10 @@ import { getJWT, getUserDetails } from "@/lib/user-details";
 import { Booth } from "@workspace/db";
 import axios from "axios";
 
-export async function fetchBooths(): Promise<Booth[]> {
+export async function fetchBooths(): Promise<{
+  booths: Booth[];
+  participatedBooths: Booth[];
+}> {
   const { email, id } = await getUserDetails();
   const token = await getJWT(email, id);
 
@@ -18,9 +21,12 @@ export async function fetchBooths(): Promise<Booth[]> {
 
     const booths = res.data;
 
-    return [...booths.booths, ...booths.participatedBooths];
+    return {
+      booths: [...booths.booths],
+      participatedBooths: [...booths.participatedBooths],
+    };
   } catch (err) {
-    return [];
+    return { booths: [], participatedBooths: [] };
   }
 }
 
@@ -147,16 +153,16 @@ export async function deleteBooth(boothId: string) {
 export async function createBooth({
   boothName,
   intervieweeId,
-  rating,
-  review,
-  passed,
+  description,
+  emoji,
+  type,
   tasks,
 }: {
   boothName: string;
   intervieweeId: string;
-  rating?: string;
-  review?: string;
-  passed?: boolean;
+  description: string;
+  emoji?: string;
+  type: string;
   tasks?: any[];
 }) {
   const { email, id } = await getUserDetails();
@@ -168,10 +174,10 @@ export async function createBooth({
       {
         title: boothName,
         intervieweeId,
-        rating,
-        review,
-        passed,
         tasks,
+        description,
+        type,
+        emoji,
       },
       {
         headers: {
