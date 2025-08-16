@@ -150,7 +150,7 @@ export class BoothsService {
     if (review) {
       await prisma.review.update({
         where: {
-          boothId: fetchedBooth.id,
+          boothId,
         },
         data: {
           content: review,
@@ -161,7 +161,7 @@ export class BoothsService {
     if (rating) {
       await prisma.rating.update({
         where: {
-          boothId: boothId,
+          boothId,
         },
         data: {
           content: rating as Pick<Rating, 'content'>['content'],

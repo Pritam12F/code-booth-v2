@@ -1,5 +1,5 @@
 import { getJWT, getUserDetails } from "@/lib/user-details";
-import { Booth } from "@workspace/db";
+import { Booth, BoothType, Rating, Review, Task, User } from "@workspace/db";
 import axios from "axios";
 
 export async function fetchBooths(): Promise<{
@@ -44,7 +44,13 @@ export async function fetchBooth(boothId: string) {
       }
     );
 
-    return res.data.booth;
+    return res.data.booth as Booth & {
+      interviewee: User;
+      rating: Rating;
+      review: Review;
+      type: BoothType;
+      tasks: Task[];
+    };
   } catch (err) {
     return null;
   }
@@ -72,6 +78,9 @@ export async function updateBooth({
   review,
   passed,
   tasks,
+  type,
+  description,
+  emoji,
 }: {
   boothId: string;
   boothName?: string;
@@ -80,6 +89,9 @@ export async function updateBooth({
   review?: string;
   passed?: boolean;
   tasks?: any[];
+  type?: string;
+  description?: string;
+  emoji?: string;
 }) {
   const { email, id } = await getUserDetails();
   const token = await getJWT(email, id);
@@ -94,6 +106,9 @@ export async function updateBooth({
         rating,
         tasks,
         review,
+        type,
+        description,
+        icon: emoji,
       },
       {
         headers: {

@@ -9,9 +9,11 @@ import {
 export function SelectWrapper({
   placeholder,
   options,
+  defaultValue,
   setValue,
 }: {
   placeholder: string;
+  defaultValue?: string;
   options: { id: string; label: string }[];
   setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
 }) {
@@ -22,7 +24,11 @@ export function SelectWrapper({
       }}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder={`Choose ${placeholder}`} />
+        {defaultValue ? (
+          <SelectValue placeholder={defaultValue} />
+        ) : (
+          <SelectValue placeholder={`Choose ${placeholder}`} />
+        )}
       </SelectTrigger>
       <SelectContent className="max-h-[300px] w-full">
         {options?.map(({ id, label }) => {

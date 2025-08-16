@@ -1,7 +1,15 @@
 import { Booth } from "@workspace/db";
 import { Badge } from "@workspace/ui/components/badge";
-import { MoreHorizontal } from "lucide-react";
-import React from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu";
+import { File, MoreHorizontal, Trash } from "lucide-react";
+import React, { useState } from "react";
+import { BoothDialog } from "./booth-dialog";
 
 export default function BoothCard({
   selectedBooth,
@@ -13,6 +21,7 @@ export default function BoothCard({
   handleBoothChange?: (booth: Booth) => void;
 }) {
   const concatIndex = selectedBooth?.type === "REACT" ? 16 : 10;
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   return (
     <div
       onClick={() => handleBoothChange?.(selectedBooth)}
@@ -42,9 +51,33 @@ export default function BoothCard({
           {selectedBooth?.type === "REACT" ? "React" : "HTML/CSS/JS"}
         </Badge>
         {type === "OWNED" && (
-          <MoreHorizontal className="h-6.5 w-6.5 rounded-lg ml-3 cursor-pointer hover:bg-gray-900 p-1" />
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreHorizontal className="h-6.5 w-6.5 rounded-lg ml-3 cursor-pointer hover:bg-gray-900 p-1" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                onClick={() => setUpdateDialogOpen(true)}
+                className="cursor-pointer"
+              >
+                <File className="text-green-500" />
+                <div>Update</div>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer">
+                <Trash className="text-red-500" />
+                <div>Delete</div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
+      <BoothDialog
+        boothId={selectedBooth.id}
+        type={"UPDATE"}
+        dialogOpen={updateDialogOpen}
+        setDialogOpen={setUpdateDialogOpen}
+      />
     </div>
   );
 }
