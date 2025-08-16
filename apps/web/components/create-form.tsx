@@ -12,6 +12,7 @@ import { Switch } from "@workspace/ui/components/switch";
 import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
 import { createBooth, fetchUsers } from "@/api";
+import EmojiPicker from "emoji-picker-react";
 
 export function CreateForm({
   className,
@@ -123,6 +124,7 @@ export function CreateForm({
           className="bg-white"
         />
       </div>
+      <EmojiPicker />
       <Button
         type="button"
         className="cursor-pointer"

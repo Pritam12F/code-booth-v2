@@ -15,7 +15,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (booths) {
-      router.push(`/dashboard/${booths?.[0].id}`);
+      router.push(`/dashboard/${booths?.[0]?.id}`);
     }
   }, [booths]);
 
